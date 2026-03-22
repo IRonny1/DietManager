@@ -71,6 +71,7 @@ export default function RegisterScreen(): React.JSX.Element {
           mode="outlined"
           icon="google"
           disabled
+          textColor={palette.white}
           style={styles.googleButton}
           contentStyle={styles.googleButtonContent}
           labelStyle={styles.googleButtonLabel}
@@ -81,7 +82,7 @@ export default function RegisterScreen(): React.JSX.Element {
         <Button
           mode="text"
           onPress={() => router.replace('/(auth)/login')}
-          textColor={palette.accent}
+          textColor={palette.white}
           style={styles.switchAuth}
         >
           Already have an account? Sign In

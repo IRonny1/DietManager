@@ -7,6 +7,7 @@ import 'react-native-reanimated';
 import { PaperProvider } from 'react-native-paper';
 
 import { useColorScheme } from '@/components/useColorScheme';
+import { paperTheme } from '@/constants/paperTheme';
 import { useAuthGate } from '@/hooks/useAuthGate';
 
 export {
@@ -49,11 +50,18 @@ function RootLayoutNav() {
   useAuthGate();
 
   return (
-    <PaperProvider>
+    <PaperProvider theme={paperTheme}>
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
         <Stack>
           <Stack.Screen name="(auth)" options={{ headerShown: false }} />
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="profile-completion"
+            options={{
+              headerShown: false,
+              animation: 'slide_from_bottom',
+            }}
+          />
           <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
         </Stack>
       </ThemeProvider>

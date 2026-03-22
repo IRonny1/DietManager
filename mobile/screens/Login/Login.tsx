@@ -56,9 +56,8 @@ export default function LoginScreen(): React.JSX.Element {
 
         <Button
           mode="text"
-          textColor={palette.textSecondary}
+          textColor={palette.accent}
           style={styles.forgotPassword}
-          disabled
         >
           Forgot Password?
         </Button>
@@ -76,6 +75,7 @@ export default function LoginScreen(): React.JSX.Element {
           mode="outlined"
           icon="google"
           disabled
+          textColor={palette.white}
           style={styles.googleButton}
           contentStyle={styles.googleButtonContent}
           labelStyle={styles.googleButtonLabel}
@@ -89,8 +89,7 @@ export default function LoginScreen(): React.JSX.Element {
           textColor={palette.accent}
           style={styles.switchAuth}
         >
-          Don't have an account? Sign Up
-        </Button>
+          Don't have an account? Sign Up</Button>
       </ScrollView>
     </KeyboardAvoidingView>
   );

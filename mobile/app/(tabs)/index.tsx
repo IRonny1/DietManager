@@ -1,14 +1,37 @@
-import { StyleSheet } from 'react-native';
+import React, { useEffect } from 'react';
+import { StyleSheet, View } from 'react-native';
 
-import EditScreenInfo from '@/components/EditScreenInfo';
-import { Text, View } from '@/components/Themed';
+import { Text } from 'react-native-paper';
+
+import ProfileCompletionBanner from '@/screens/Profile/components/ProfileCompletionBanner';
+import { useProfileStore } from '@/stores/useProfileStore';
 
 export default function TabOneScreen() {
+  const profile = useProfileStore((state) => state.profile);
+  const loadProfile = useProfileStore((state) => state.loadProfile);
+  const isComplete = profile?.isComplete ?? false;
+  const completionPercentage = profile?.completionPercentage ?? 0;
+
+  useEffect(() => {
+    loadProfile();
+  }, [loadProfile]);
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Tab One</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <EditScreenInfo path="app/(tabs)/index.tsx" />
+      {!isComplete && (
+        <View style={styles.bannerContainer}>
+          <ProfileCompletionBanner completionPercentage={completionPercentage} />
+        </View>
+      )}
+
+      <View style={styles.content}>
+        <Text variant="headlineMedium" style={styles.title}>
+          🍽️ Dashboard
+        </Text>
+        <Text variant="bodyLarge" style={styles.subtitle}>
+          Your personalized diet overview will appear here.
+        </Text>
+      </View>
     </View>
   );
 }
@@ -16,16 +39,25 @@ export default function TabOneScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
+    paddingHorizontal: 24,
+    paddingTop: 16,
+  },
+  bannerContainer: {
+    marginBottom: 24,
+  },
+  content: {
+    flex: 1,
     justifyContent: 'center',
+    alignItems: 'center',
   },
   title: {
-    fontSize: 20,
     fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 8,
   },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
+  subtitle: {
+    textAlign: 'center',
+    opacity: 0.6,
+    lineHeight: 24,
   },
 });
