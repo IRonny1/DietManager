@@ -14,6 +14,4 @@ export const VALIDATION_MESSAGES = {
   PASSWORD_SPECIAL_CHAR: 'Password must contain at least one special character',
   CONFIRM_PASSWORD_REQUIRED: 'Please confirm your password',
   CONFIRM_PASSWORD_MISMATCH: 'Passwords do not match',
-  FIRST_NAME_REQUIRED: 'First name is required',
-  LAST_NAME_REQUIRED: 'Last name is required',
 } as const;
