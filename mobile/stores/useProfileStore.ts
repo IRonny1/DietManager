@@ -7,6 +7,7 @@ import type {
   ProfileStepData,
   UserProfile,
 } from '@/types/profile.types';
+import { OnboardingData } from '@/types/onboarding.types';
 
 type ProfileState = {
   profile: UserProfile | null;
@@ -15,6 +16,8 @@ type ProfileState = {
   isLoading: boolean;
   isSaving: boolean;
   error: string | null;
+  hasCompletedOnboarding: boolean;
+  onboardingData: OnboardingData;
 };
 
 type ProfileActions = {
@@ -27,6 +30,8 @@ type ProfileActions = {
   completeProfile: () => Promise<void>;
   clearError: () => void;
   resetProfile: () => void;
+  setOnboardingData: (partial: Partial<OnboardingData>) => void;
+  completeOnboarding: () => void;
 };
 
 type ProfileStore = ProfileState & ProfileActions;
@@ -38,6 +43,13 @@ const initialState: ProfileState = {
   isLoading: false,
   isSaving: false,
   error: null,
+  hasCompletedOnboarding: false,
+  onboardingData: {
+    goalMethod: null,
+    personalData: null,
+    activityGoal: null,
+    calorieGoal: null,
+  },
 };
 
 export const useProfileStore = create<ProfileStore>((set, get) => ({
@@ -138,6 +150,14 @@ export const useProfileStore = create<ProfileStore>((set, get) => ({
     profileService.resetMockProfile();
     set(initialState);
   },
+
+  setOnboardingData: (partial: Partial<OnboardingData>) =>
+    set((s) => ({
+      onboardingData: { ...s.onboardingData, ...partial },
+    })),
+
+  completeOnboarding: () =>
+    set({ hasCompletedOnboarding: true }),
 }));
 
 export function useProfile(): UserProfile | null {
@@ -167,3 +187,9 @@ export function useMeasurementSystem(): MeasurementSystem {
 export function useIsProfileComplete(): boolean {
   return useProfileStore((state) => state.profile?.isComplete ?? false);
 }
+
+export const useHasCompletedOnboarding = (): boolean =>
+  useProfileStore((s) => s.hasCompletedOnboarding);
+
+export const useOnboardingData = (): OnboardingData =>
+  useProfileStore((s) => s.onboardingData);

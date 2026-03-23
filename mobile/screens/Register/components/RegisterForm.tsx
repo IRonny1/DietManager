@@ -4,7 +4,7 @@ import { StyleSheet, View } from 'react-native';
 import { Controller, type UseFormReturn } from 'react-hook-form';
 import { Button, HelperText, TextInput } from 'react-native-paper';
 
-import { palette } from '@/constants/Colors';
+import { Colors } from '@/constants/Colors';
 import type { RegisterFormValues } from '@/types/auth.types';
 
 type RegisterFormProps = {
@@ -38,64 +38,34 @@ export default function RegisterForm({
         </HelperText>
       )}
 
-      <View style={styles.nameRow}>
-        <Controller
-          control={control}
-          name="firstName"
-          render={({ field: { onChange, onBlur, value } }) => (
-            <View style={styles.nameField}>
-              <TextInput
-                label="First Name"
-                value={value}
-                onChangeText={onChange}
-                onBlur={onBlur}
-                mode="outlined"
-                autoCapitalize="words"
-                autoComplete="given-name"
-                error={!!formState.errors.firstName}
-                disabled={isSubmitting}
-                left={<TextInput.Icon icon="account-outline" />}
-                style={styles.input}
-                outlineColor={palette.divider}
-                activeOutlineColor={palette.primary}
-              />
-              {formState.errors.firstName && (
-                <HelperText type="error">
-                  {formState.errors.firstName.message}
-                </HelperText>
-              )}
-            </View>
-          )}
-        />
-
-        <Controller
-          control={control}
-          name="lastName"
-          render={({ field: { onChange, onBlur, value } }) => (
-            <View style={styles.nameField}>
-              <TextInput
-                label="Last Name"
-                value={value}
-                onChangeText={onChange}
-                onBlur={onBlur}
-                mode="outlined"
-                autoCapitalize="words"
-                autoComplete="family-name"
-                error={!!formState.errors.lastName}
-                disabled={isSubmitting}
-                style={styles.input}
-                outlineColor={palette.divider}
-                activeOutlineColor={palette.primary}
-              />
-              {formState.errors.lastName && (
-                <HelperText type="error">
-                  {formState.errors.lastName.message}
-                </HelperText>
-              )}
-            </View>
-          )}
-        />
-      </View>
+      <Controller
+        control={control}
+        name="fullName"
+        render={({ field: { onChange, onBlur, value } }) => (
+          <View style={styles.fieldContainer}>
+            <TextInput
+              label="Full Name"
+              value={value}
+              onChangeText={onChange}
+              onBlur={onBlur}
+              mode="outlined"
+              autoCapitalize="words"
+              autoComplete="name"
+              error={!!formState.errors.fullName}
+              disabled={isSubmitting}
+              left={<TextInput.Icon icon="account-outline" />}
+              style={styles.input}
+              outlineColor={Colors.divider}
+              activeOutlineColor={Colors.primary}
+            />
+            {formState.errors.fullName && (
+              <HelperText type="error">
+                {formState.errors.fullName.message}
+              </HelperText>
+            )}
+          </View>
+        )}
+      />
 
       <Controller
         control={control}
@@ -115,8 +85,8 @@ export default function RegisterForm({
               disabled={isSubmitting}
               left={<TextInput.Icon icon="email-outline" />}
               style={styles.input}
-              outlineColor={palette.divider}
-              activeOutlineColor={palette.primary}
+              outlineColor={Colors.divider}
+              activeOutlineColor={Colors.primary}
             />
             {formState.errors.email && (
               <HelperText type="error">
@@ -151,8 +121,8 @@ export default function RegisterForm({
                 />
               }
               style={styles.input}
-              outlineColor={palette.divider}
-              activeOutlineColor={palette.primary}
+              outlineColor={Colors.divider}
+              activeOutlineColor={Colors.primary}
             />
             {formState.errors.password && (
               <HelperText type="error">
@@ -186,8 +156,8 @@ export default function RegisterForm({
                 />
               }
               style={styles.input}
-              outlineColor={palette.divider}
-              activeOutlineColor={palette.primary}
+              outlineColor={Colors.divider}
+              activeOutlineColor={Colors.primary}
             />
             {formState.errors.confirmPassword && (
               <HelperText type="error">
@@ -205,7 +175,7 @@ export default function RegisterForm({
         disabled={isSubmitting}
         style={styles.submitButton}
         contentStyle={styles.submitButtonContent}
-        buttonColor={palette.primary}
+        buttonColor={Colors.primary}
         labelStyle={styles.submitButtonLabel}
       >
         Create Account
@@ -218,18 +188,11 @@ const styles = StyleSheet.create({
   container: {
     gap: 4,
   },
-  nameRow: {
-    flexDirection: 'row',
-    gap: 12,
-  },
-  nameField: {
-    flex: 1,
-  },
   fieldContainer: {
     marginBottom: 4,
   },
   input: {
-    backgroundColor: palette.white,
+    backgroundColor: Colors.white,
   },
   serverError: {
     fontSize: 14,

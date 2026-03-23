@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react';
 
+import { useRouter } from 'expo-router';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm, type UseFormReturn } from 'react-hook-form';
 import { z } from 'zod';
@@ -16,8 +17,7 @@ import type { RegisterFormValues } from '@/types/auth.types';
 
 export const registerSchema = z
   .object({
-    firstName: z.string().trim().min(1, VALIDATION_MESSAGES.FIRST_NAME_REQUIRED),
-    lastName: z.string().trim().min(1, VALIDATION_MESSAGES.LAST_NAME_REQUIRED),
+    fullName: z.string().min(1, 'Full name is required').trim(),
     email: z
       .string()
       .min(1, VALIDATION_MESSAGES.EMAIL_REQUIRED)
@@ -52,6 +52,7 @@ type UseRegisterFormReturn = {
 };
 
 export function useRegisterForm(): UseRegisterFormReturn {
+  const router = useRouter();
   const register = useAuthStore((state) => state.register);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] =
@@ -60,8 +61,7 @@ export function useRegisterForm(): UseRegisterFormReturn {
   const form = useForm<RegisterFormValues>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
-      firstName: '',
-      lastName: '',
+      fullName: '',
       email: '',
       password: '',
       confirmPassword: '',
@@ -78,12 +78,15 @@ export function useRegisterForm(): UseRegisterFormReturn {
       setIsSubmitting(true);
 
       try {
+        const [firstName, ...rest] = values.fullName.trim().split(' ');
+        const lastName = rest.join(' ') || '';
         await register({
           email: values.email,
           password: values.password,
-          firstName: values.firstName.trim(),
-          lastName: values.lastName.trim(),
+          firstName,
+          lastName,
         });
+        router.replace('/(onboarding)/welcome');
       } catch (err) {
         const message =
           err instanceof Error
@@ -94,7 +97,7 @@ export function useRegisterForm(): UseRegisterFormReturn {
         setIsSubmitting(false);
       }
     },
-    [register],
+    [register, router],
   );
 
   const onSubmit = useCallback((): void => {

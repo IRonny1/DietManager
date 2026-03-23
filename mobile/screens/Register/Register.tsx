@@ -1,143 +1,57 @@
 import React from 'react';
-import {
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  View,
-} from 'react-native';
-
+import { View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { Text } from 'react-native-paper';
 import { useRouter } from 'expo-router';
-import { Button, Divider, Text } from 'react-native-paper';
-
-import { palette } from '@/constants/Colors';
-
+import { SafeAreaView } from 'react-native-safe-area-context';
 import RegisterForm from './components/RegisterForm';
 import { useRegisterForm } from './hooks/useRegisterForm';
+import { Colors } from '../../constants/Colors';
+import { SPACING } from '../../constants/spacing.constants';
+import { FONT_SIZE, FONT_WEIGHT } from '../../constants/typography.constants';
+import AppLogo from '../../components/AppLogo/AppLogo';
 
-export default function RegisterScreen(): React.JSX.Element {
+export default function Register(): React.JSX.Element {
   const router = useRouter();
-  const {
-    form,
-    isSubmitting,
-    serverError,
-    onSubmit,
-    isPasswordVisible,
-    togglePasswordVisibility,
-    isConfirmPasswordVisible,
-    toggleConfirmPasswordVisibility,
-  } = useRegisterForm();
+  const formProps = useRegisterForm();
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}
-    >
-      <ScrollView
-        contentContainerStyle={styles.scrollContent}
-        keyboardShouldPersistTaps="handled"
-      >
-        <View style={styles.header}>
-          <Text variant="headlineMedium" style={styles.title}>
-            Create Account
+    <SafeAreaView style={styles.safe}>
+      <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
+        <AppLogo style={styles.logo} />
+
+        <Text style={styles.title}>Create Account</Text>
+        <Text style={styles.subtitle}>Sign up to start your nutrition journey</Text>
+
+        <RegisterForm {...formProps} />
+
+        <TouchableOpacity onPress={() => router.push('/(auth)/login')} style={styles.loginBtn}>
+          <Text style={styles.loginText}>
+            {'Already have an account? '}
+            <Text style={styles.loginLink}>Log In</Text>
           </Text>
-          <Text variant="bodyLarge" style={styles.subtitle}>
-            Start tracking your nutrition with AI
-          </Text>
-        </View>
-
-        <RegisterForm
-          form={form}
-          isSubmitting={isSubmitting}
-          serverError={serverError}
-          onSubmit={onSubmit}
-          isPasswordVisible={isPasswordVisible}
-          togglePasswordVisibility={togglePasswordVisibility}
-          isConfirmPasswordVisible={isConfirmPasswordVisible}
-          toggleConfirmPasswordVisibility={toggleConfirmPasswordVisibility}
-        />
-
-        <View style={styles.dividerContainer}>
-          <Divider style={styles.divider} />
-          <Text variant="bodySmall" style={styles.dividerText}>
-            OR
-          </Text>
-          <Divider style={styles.divider} />
-        </View>
-
-        {/* Google Sign-Up placeholder — will be functional with OAuth later */}
-        <Button
-          mode="outlined"
-          icon="google"
-          disabled
-          textColor={palette.white}
-          style={styles.googleButton}
-          contentStyle={styles.googleButtonContent}
-          labelStyle={styles.googleButtonLabel}
-        >
-          Sign up with Google
-        </Button>
-
-        <Button
-          mode="text"
-          onPress={() => router.replace('/(auth)/login')}
-          textColor={palette.white}
-          style={styles.switchAuth}
-        >
-          Already have an account? Sign In
-        </Button>
+        </TouchableOpacity>
       </ScrollView>
-    </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safe: { flex: 1, backgroundColor: Colors.bgPage },
   container: {
-    flex: 1,
-    backgroundColor: palette.white,
-  },
-  scrollContent: {
     flexGrow: 1,
-    justifyContent: 'center',
-    paddingHorizontal: 32,
-    paddingVertical: 48,
+    paddingHorizontal: SPACING.LG,
+    paddingTop: SPACING.XL,
+    paddingBottom: SPACING.XL,
   },
-  header: {
-    marginBottom: 32,
-  },
+  logo: { alignSelf: 'center', marginBottom: SPACING.XL },
   title: {
-    color: palette.textPrimary,
-    fontWeight: 'bold',
-    marginBottom: 8,
+    fontSize: FONT_SIZE.XXL,
+    fontWeight: FONT_WEIGHT.BOLD,
+    color: Colors.textPrimary,
+    marginBottom: SPACING.XS,
   },
-  subtitle: {
-    color: palette.textSecondary,
-  },
-  dividerContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginVertical: 24,
-  },
-  divider: {
-    flex: 1,
-  },
-  dividerText: {
-    marginHorizontal: 16,
-    color: palette.textSecondary,
-  },
-  googleButton: {
-    borderRadius: 12,
-    borderColor: palette.divider,
-  },
-  googleButtonContent: {
-    paddingVertical: 8,
-  },
-  googleButtonLabel: {
-    fontSize: 14,
-    color: palette.textSecondary,
-  },
-  switchAuth: {
-    marginTop: 24,
-  },
+  subtitle: { fontSize: FONT_SIZE.MD, color: Colors.textSecondary, marginBottom: SPACING.XL },
+  loginBtn: { marginTop: SPACING.LG, alignSelf: 'center' },
+  loginText: { fontSize: FONT_SIZE.MD, color: Colors.textSecondary, textAlign: 'center' },
+  loginLink: { color: Colors.primary, fontWeight: FONT_WEIGHT.SEMIBOLD },
 });

@@ -5,11 +5,12 @@ import { Controller, type UseFormReturn } from 'react-hook-form';
 import {
   Button,
   HelperText,
-  IconButton,
   TextInput,
 } from 'react-native-paper';
 
-import { palette } from '@/constants/Colors';
+import { Colors } from '../../../constants/Colors';
+import { SPACING } from '../../../constants/spacing.constants';
+import { FONT_SIZE, FONT_WEIGHT } from '../../../constants/typography.constants';
 import type { LoginFormValues } from '@/types/auth.types';
 
 type LoginFormProps = {
@@ -57,8 +58,8 @@ export default function LoginForm({
               disabled={isSubmitting}
               left={<TextInput.Icon icon="email-outline" />}
               style={styles.input}
-              outlineColor={palette.divider}
-              activeOutlineColor={palette.primary}
+              outlineColor={Colors.border}
+              activeOutlineColor={Colors.primary}
             />
             {formState.errors.email && (
               <HelperText type="error">
@@ -93,8 +94,8 @@ export default function LoginForm({
                 />
               }
               style={styles.input}
-              outlineColor={palette.divider}
-              activeOutlineColor={palette.primary}
+              outlineColor={Colors.border}
+              activeOutlineColor={Colors.primary}
             />
             {formState.errors.password && (
               <HelperText type="error">
@@ -112,10 +113,10 @@ export default function LoginForm({
         disabled={isSubmitting}
         style={styles.submitButton}
         contentStyle={styles.submitButtonContent}
-        buttonColor={palette.primary}
+        buttonColor={Colors.primary}
         labelStyle={styles.submitButtonLabel}
       >
-        Sign In
+        Login
       </Button>
     </View>
   );
@@ -123,28 +124,29 @@ export default function LoginForm({
 
 const styles = StyleSheet.create({
   container: {
-    gap: 4,
+    gap: SPACING.XS,
   },
   fieldContainer: {
-    marginBottom: 4,
+    marginBottom: SPACING.XS,
   },
   input: {
-    backgroundColor: palette.white,
+    backgroundColor: Colors.bgPage,
   },
   serverError: {
-    fontSize: 14,
+    fontSize: FONT_SIZE.SM,
     textAlign: 'center',
-    marginBottom: 8,
+    marginBottom: SPACING.SM,
   },
   submitButton: {
     borderRadius: 12,
-    marginTop: 16,
+    marginTop: SPACING.LG,
+    width: '100%',
   },
   submitButtonContent: {
-    paddingVertical: 8,
+    paddingVertical: SPACING.SM,
   },
   submitButtonLabel: {
-    fontSize: 16,
-    fontWeight: '600',
+    fontSize: FONT_SIZE.MD,
+    fontWeight: FONT_WEIGHT.SEMIBOLD,
   },
 });

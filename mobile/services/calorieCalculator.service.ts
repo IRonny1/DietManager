@@ -1,4 +1,4 @@
-import { ActivityLevel, Gender, PrimaryGoal } from '../types/onboarding.types';
+import { ActivityLevel, Gender, PrimaryGoal, MacroBreakdown } from '../types/onboarding.types';
 
 const ACTIVITY_MULTIPLIERS: Record<ActivityLevel, number> = {
   sedentary: 1.2,
@@ -33,12 +33,6 @@ export function calculateTDEE(bmr: number, activityLevel: ActivityLevel): number
 
 export function calculateCalorieGoal(tdee: number, primaryGoal: PrimaryGoal): number {
   return Math.max(1200, tdee + GOAL_ADJUSTMENTS[primaryGoal]);
-}
-
-export interface MacroBreakdown {
-  protein: number;
-  carbs: number;
-  fat: number;
 }
 
 export function calculateMacros(calorieGoal: number): MacroBreakdown {

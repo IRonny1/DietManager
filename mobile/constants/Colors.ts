@@ -1,43 +1,68 @@
 export const palette = {
+  // Brand
   primary: '#4CAF50',
-  primaryLight: '#81C784',
+  primaryLight: '#E8F5E9',
   primaryDark: '#388E3C',
   secondary: '#FF9800',
-  secondaryLight: '#FFB74D',
+  secondaryLight: '#FFF3E0',
   accent: '#2196F3',
   error: '#F44336',
-  surface: '#FFFFFF',
-  backgroundLight: '#F5F5F5',
-  textPrimary: '#212121',
-  textSecondary: '#757575',
-  divider: '#BDBDBD',
+
+  // Backgrounds
+  bgPage: '#FFFFFF',
+  bgCard: '#F4F4F5',
+  bgDark: '#000000',
+  bgMuted: '#27272A',
+
+  // Text
+  textPrimary: '#000000',
+  textSecondary: '#71717A',
+  textTertiary: '#A1A1AA',
+  textDisabled: '#D4D4D8',
+  textInverted: '#FFFFFF',
+
+  // Borders
+  border: '#E5E5E5',
+  borderStrong: '#E4E4E7',
+  borderSubtle: '#F4F4F5',
+  /** @deprecated use `border` — kept as alias until components are migrated */
+  divider: '#E5E5E5',
+
+  // Macros
+  carbs: '#4CAF50',
+  fat: '#FF9800',
+  protein: '#2196F3',
+
+  // Utility
   white: '#FFFFFF',
   black: '#000000',
 } as const;
 
-const Colors = {
+const ColorSchemes = {
   light: {
     text: palette.textPrimary,
-    background: palette.backgroundLight,
-    surface: palette.surface,
+    background: palette.bgPage,
+    surface: palette.bgCard,
     tint: palette.primary,
     accent: palette.accent,
     error: palette.error,
     secondary: palette.secondary,
-    tabIconDefault: '#ccc',
+    tabIconDefault: palette.textTertiary,
     tabIconSelected: palette.primary,
   },
   dark: {
-    text: palette.white,
-    background: palette.black,
-    surface: '#1E1E1E',
+    text: palette.textInverted,
+    background: palette.bgDark,
+    surface: palette.bgMuted,
     tint: palette.primaryLight,
     accent: palette.accent,
     error: palette.error,
     secondary: palette.secondaryLight,
-    tabIconDefault: '#ccc',
-    tabIconSelected: palette.white,
+    tabIconDefault: palette.textTertiary,
+    tabIconSelected: palette.textInverted,
   },
 } as const;
 
-export default Colors;
+export default ColorSchemes;
+
+export const Colors = palette;

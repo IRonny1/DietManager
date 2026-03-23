@@ -1,4 +1,6 @@
 /node_modules
 /.idea
+/.claude
 /images
 diet-manager.pen
+mobile/.env
