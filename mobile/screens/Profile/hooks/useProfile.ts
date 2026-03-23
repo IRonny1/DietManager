@@ -37,7 +37,7 @@ export function useProfile(): UseProfileReturn {
   }, [router]);
 
   const handleLogout = useCallback((): void => {
-    logout();
+    void logout();
   }, [logout]);
 
   return {
