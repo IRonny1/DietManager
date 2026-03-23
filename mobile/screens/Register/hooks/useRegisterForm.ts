@@ -78,13 +78,9 @@ export function useRegisterForm(): UseRegisterFormReturn {
       setIsSubmitting(true);
 
       try {
-        const [firstName, ...rest] = values.fullName.trim().split(' ');
-        const lastName = rest.join(' ') || '';
         await register({
           email: values.email,
           password: values.password,
-          firstName,
-          lastName,
         });
         router.replace('/(onboarding)/welcome');
       } catch (err) {

@@ -1,8 +1,8 @@
 export type User = {
   id: string;
   email: string;
-  firstName: string;
-  lastName: string;
+  tenantId: string;
+  emailVerified: boolean;
 };
 
 export type LoginRequest = {
@@ -13,13 +13,11 @@ export type LoginRequest = {
 export type RegisterRequest = {
   email: string;
   password: string;
-  firstName: string;
-  lastName: string;
 };
 
 export type AuthResponse = {
-  user: User;
-  token: string;
+  accessToken: string;
+  refreshToken: string;
 };
 
 export type AuthError = {
@@ -29,7 +27,8 @@ export type AuthError = {
 
 export type AuthState = {
   user: User | null;
-  token: string | null;
+  accessToken: string | null;
+  refreshToken: string | null;
   isAuthenticated: boolean;
   isLoading: boolean;
   error: string | null;
@@ -38,7 +37,8 @@ export type AuthState = {
 export type AuthActions = {
   login: (data: LoginRequest) => Promise<void>;
   register: (data: RegisterRequest) => Promise<void>;
-  logout: () => void;
+  logout: () => Promise<void>;
+  refreshTokens: () => Promise<void>;
   clearError: () => void;
 };
 

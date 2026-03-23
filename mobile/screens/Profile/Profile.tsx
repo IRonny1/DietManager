@@ -28,12 +28,11 @@ export default function ProfileScreen(): React.JSX.Element {
       <View style={styles.userCard}>
         <View style={styles.avatar}>
           <Text style={styles.avatarText}>
-            {user?.firstName?.[0]?.toUpperCase() ?? '?'}
-            {user?.lastName?.[0]?.toUpperCase() ?? ''}
+            {user?.email?.[0]?.toUpperCase() ?? '?'}
           </Text>
         </View>
         <Text variant="titleLarge" style={styles.userName}>
-          {user?.firstName} {user?.lastName}
+          {user?.email}
         </Text>
         <Text variant="bodyMedium" style={styles.userEmail}>
           {user?.email}

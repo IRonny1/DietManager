@@ -13,23 +13,26 @@ type AuthStore = AuthState & AuthActions;
 
 const initialState: AuthState = {
   user: null,
-  token: null,
+  accessToken: null,
+  refreshToken: null,
   isAuthenticated: false,
   isLoading: false,
   error: null,
 };
 
-export const useAuthStore = create<AuthStore>((set) => ({
+export const useAuthStore = create<AuthStore>((set, get) => ({
   ...initialState,
 
   login: async (data: LoginRequest): Promise<void> => {
     set({ isLoading: true, error: null });
 
     try {
-      const response = await authService.login(data);
+      const { accessToken, refreshToken } = await authService.login(data);
+      const user = await authService.getMe(accessToken);
       set({
-        user: response.user,
-        token: response.token,
+        user,
+        accessToken,
+        refreshToken,
         isAuthenticated: true,
         isLoading: false,
         error: null,
@@ -46,10 +49,12 @@ export const useAuthStore = create<AuthStore>((set) => ({
     set({ isLoading: true, error: null });
 
     try {
-      const response = await authService.register(data);
+      const { accessToken, refreshToken } = await authService.register(data);
+      const user = await authService.getMe(accessToken);
       set({
-        user: response.user,
-        token: response.token,
+        user,
+        accessToken,
+        refreshToken,
         isAuthenticated: true,
         isLoading: false,
         error: null,
@@ -64,8 +69,21 @@ export const useAuthStore = create<AuthStore>((set) => ({
     }
   },
 
-  logout: (): void => {
+  logout: async (): Promise<void> => {
+    const { refreshToken } = get();
+    if (refreshToken !== null) {
+      await authService.logout(refreshToken);
+    }
     set(initialState);
+  },
+
+  refreshTokens: async (): Promise<void> => {
+    const { refreshToken } = get();
+    if (refreshToken === null) {
+      throw new Error('No refresh token available.');
+    }
+    const tokens = await authService.refreshTokens(refreshToken);
+    set({ accessToken: tokens.accessToken, refreshToken: tokens.refreshToken });
   },
 
   clearError: (): void => {

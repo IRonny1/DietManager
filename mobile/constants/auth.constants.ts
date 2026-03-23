@@ -4,20 +4,6 @@ export const PASSWORD_UPPERCASE_REGEX = /[A-Z]/;
 export const PASSWORD_NUMBER_REGEX = /\d/;
 export const PASSWORD_SPECIAL_CHAR_REGEX = /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/;
 
-export const MOCK_DELAY_MS = 1500;
-
-export const MOCK_ERROR_EMAIL = 'error@test.com';
-export const MOCK_EXISTING_EMAIL = 'existing@test.com';
-
-export const MOCK_USER = {
-  id: 'mock-user-001',
-  email: '',
-  firstName: '',
-  lastName: '',
-} as const;
-
-export const MOCK_TOKEN = 'mock-jwt-token-abc123';
-
 export const VALIDATION_MESSAGES = {
   EMAIL_REQUIRED: 'Email is required',
   EMAIL_INVALID: 'Please enter a valid email address',
