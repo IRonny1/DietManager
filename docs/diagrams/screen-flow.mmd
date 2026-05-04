@@ -7,6 +7,7 @@ graph TD
         ForgotPwd["ForgotPassword"]
         EmailSent["EmailSent\n(check inbox)"]
         ForgotPwd -->|"submit email"| EmailSent
+        ForgotPwd -->|"← Back"| Login
         EmailSent -->|"Back to Login"| Login
         Register -->|"Already have account?"| Login
         Login -->|"Don't have an account?"| Register
@@ -83,6 +84,8 @@ graph TD
             ProfileScreen -->|"Weight Log"| WeightLog
             EditProfile -->|"Save"| ProfileScreen
             EditMyGoals -->|"Save"| ProfileScreen
+            EditProfile -->|"Cancel"| ProfileScreen
+            EditMyGoals -->|"Cancel"| ProfileScreen
             WaterTracking -->|"Log Custom Amount"| LogCustomAmt
             LogCustomAmt -->|"Log"| WaterTracking
             WeightLog -->|"+ button"| LogWeightModal

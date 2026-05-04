@@ -39,7 +39,7 @@ graph LR
     subgraph API["🔌 API Layer · Epic 09"]
         direction TB
         API_Client["client.ts\naxios · JWT interceptors\nauto-logout on 401"]
-        API_Mods["auth.api · profile.api\ndiary.api · stats.api\nwaterTracking.api · weightLog.api"]
+        API_Mods["auth.api · profile.api\ndiary.api · stats.api\nscan.api · waterTracking.api · weightLog.api"]
     end
 
     subgraph BE["🖥️ Backend · NestJS"]
@@ -49,6 +49,7 @@ graph LR
         BE_Diary["DiaryModule\nCRUD /api/diary"]
         BE_Water["WaterModule\nCRUD /api/water"]
         BE_Weight["WeightModule\nCRUD /api/weight"]
+        BE_Stats["Statistics (via DiaryModule)\nGET /api/stats"]
     end
 
     subgraph DB["🗄️ Database · PostgreSQL + Prisma"]
