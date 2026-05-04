@@ -39,7 +39,7 @@ graph LR
     subgraph API["🔌 API Layer · Epic 09"]
         direction TB
         API_Client["client.ts\naxios · JWT interceptors\nauto-logout on 401"]
-        API_Mods["auth.api · profile.api\ndiary.api\nwaterTracking.api · weightLog.api"]
+        API_Mods["auth.api · profile.api\ndiary.api · stats.api\nwaterTracking.api · weightLog.api"]
     end
 
     subgraph BE["🖥️ Backend · NestJS"]
@@ -65,6 +65,7 @@ graph LR
     SVC_Calc --> SVC_Stores
     SVC_Diary --> API
     SVC_Scan --> API
+    SVC_Stats --> API
     SVC_Water --> API
     SVC_Weight --> API
     SVC_Stores --> API
