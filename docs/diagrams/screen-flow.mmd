@@ -9,6 +9,7 @@ graph TD
         ForgotPwd -->|"submit email"| EmailSent
         EmailSent -->|"Back to Login"| Login
         Register -->|"Already have account?"| Login
+        Login -->|"Don't have an account?"| Register
     end
 
     subgraph OnboardingGroup["👋 Onboarding · Epic 02\n7 screens"]
@@ -28,6 +29,7 @@ graph TD
         subgraph HomeTab["🏠 Home · Epic 03"]
             Home["Home\ncalorie ring + meals"]
             HomeEmpty["Home\nempty state"]
+            Home -->|"no meals today"| HomeEmpty
         end
 
         subgraph HistoryTab["📋 History · Epic 05"]
@@ -35,6 +37,7 @@ graph TD
             DatePicker["DateRangePicker\nmodal"]
             History -->|"Custom chip"| DatePicker
             DatePicker -->|"Confirm"| History
+            DatePicker -->|"Cancel"| History
         end
 
         subgraph ScanTab["📷 Scan · Epic 04"]
@@ -61,6 +64,7 @@ graph TD
             StatsNutrition <-->|"tab toggle"| StatsBody
             StatsBody -->|"Add Entry"| LogWeightFromStats
             LogWeightFromStats -->|"Save"| StatsBody
+            LogWeightFromStats -->|"Cancel"| StatsBody
         end
 
         subgraph ProfileTab["👤 Profile · Epic 07 + 08"]
@@ -77,10 +81,15 @@ graph TD
             ProfileScreen -->|"Log Out"| LogoutModal
             ProfileScreen -->|"Water Tracking"| WaterTracking
             ProfileScreen -->|"Weight Log"| WeightLog
+            EditProfile -->|"Save"| ProfileScreen
+            EditMyGoals -->|"Save"| ProfileScreen
             WaterTracking -->|"Log Custom Amount"| LogCustomAmt
             LogCustomAmt -->|"Log"| WaterTracking
             WeightLog -->|"+ button"| LogWeightModal
             LogWeightModal -->|"Save"| WeightLog
+            LogoutModal -->|"Cancel"| ProfileScreen
+            LogCustomAmt -->|"Cancel"| WaterTracking
+            LogWeightModal -->|"Cancel"| WeightLog
         end
     end
 
