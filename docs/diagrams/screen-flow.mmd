@@ -1,0 +1,109 @@
+graph TD
+    Entry(["⚡ App Entry\nuseAuthGate"])
+
+    subgraph AuthGroup["🔐 Auth Group · Epic 02\nLogin · Register · ForgotPassword · EmailSent"]
+        Login["Login"]
+        Register["Register"]
+        ForgotPwd["ForgotPassword"]
+        EmailSent["EmailSent\n(check inbox)"]
+        ForgotPwd -->|"submit email"| EmailSent
+        EmailSent -->|"Back to Login"| Login
+        Register -->|"Already have account?"| Login
+    end
+
+    subgraph OnboardingGroup["👋 Onboarding · Epic 02\n7 screens"]
+        OB_Welcome["Welcome"]
+        OB_Features["Features"]
+        OB_Method["Method\n(AI Scan / Manual)"]
+        OB_Personal["Personal Data"]
+        OB_Activity["Activity & Goal"]
+        OB_Manual["Manual Entry\n(calorie goals)"]
+        OB_Result["Result Modal\n(Your plan is ready)"]
+        OB_Welcome --> OB_Features --> OB_Method
+        OB_Method -->|"AI Scan"| OB_Personal --> OB_Activity --> OB_Result
+        OB_Method -->|"Manual Entry"| OB_Manual --> OB_Result
+    end
+
+    subgraph MainTabs["Main Tabs"]
+        subgraph HomeTab["🏠 Home · Epic 03"]
+            Home["Home\ncalorie ring + meals"]
+            HomeEmpty["Home\nempty state"]
+        end
+
+        subgraph HistoryTab["📋 History · Epic 05"]
+            History["History\ngrouped meal list"]
+            DatePicker["DateRangePicker\nmodal"]
+            History -->|"Custom chip"| DatePicker
+            DatePicker -->|"Confirm"| History
+        end
+
+        subgraph ScanTab["📷 Scan · Epic 04"]
+            ScanScreen["Scan\ncamera viewfinder"]
+            Processing["Processing\nanalyzing food..."]
+            NoPermission["No Camera\nPermission"]
+            FoodNotFound["Food Not\nRecognized"]
+            ScanResult["Scan Result\ncalories + macros"]
+            EditMeal["Edit Meal\nfull detail form"]
+            ScanScreen -->|"capture"| Processing
+            ScanScreen -->|"no permission"| NoPermission
+            Processing -->|"recognized"| ScanResult
+            Processing -->|"unrecognized"| FoodNotFound
+            FoodNotFound -->|"Scan Again"| ScanScreen
+            FoodNotFound -->|"Enter Manually"| EditMeal
+            ScanResult -->|"Edit Details"| EditMeal
+            NoPermission -->|"Enter Manually"| EditMeal
+        end
+
+        subgraph StatsTab["📊 Statistics · Epic 06"]
+            StatsNutrition["Statistics\nNutrition sub-tab\ncalorie + macro charts"]
+            StatsBody["Statistics\nBody sub-tab\nweight + BMI"]
+            LogWeightFromStats["LogWeight\nmodal"]
+            StatsNutrition <-->|"tab toggle"| StatsBody
+            StatsBody -->|"Add Entry"| LogWeightFromStats
+            LogWeightFromStats -->|"Save"| StatsBody
+        end
+
+        subgraph ProfileTab["👤 Profile · Epic 07 + 08"]
+            ProfileScreen["Profile\ngoals + links"]
+            EditProfile["Edit Profile\nname · email · body info"]
+            EditMyGoals["Edit My Goals\ncalorie goal · activity"]
+            LogoutModal["Logout\nConfirmation modal"]
+            WaterTracking["Water Tracking\nEpic 08\nprogress ring + log"]
+            LogCustomAmt["Log Custom\nAmount modal"]
+            WeightLog["Weight Log\nEpic 08\ntrend chart + history"]
+            LogWeightModal["Log Weight\nmodal"]
+            ProfileScreen -->|"Edit Profile"| EditProfile
+            ProfileScreen -->|"Edit My Goals"| EditMyGoals
+            ProfileScreen -->|"Log Out"| LogoutModal
+            ProfileScreen -->|"Water Tracking"| WaterTracking
+            ProfileScreen -->|"Weight Log"| WeightLog
+            WaterTracking -->|"Log Custom Amount"| LogCustomAmt
+            LogCustomAmt -->|"Log"| WaterTracking
+            WeightLog -->|"+ button"| LogWeightModal
+            LogWeightModal -->|"Save"| WeightLog
+        end
+    end
+
+    Entry -->|"not authenticated"| Login
+    Entry -->|"authenticated\nonboarding complete"| MainTabs
+    Entry -->|"authenticated\nonboarding pending"| OB_Welcome
+    Login -->|"success · returning user"| MainTabs
+    Login -->|"Forgot password?"| ForgotPwd
+    Register -->|"success · first time"| OB_Welcome
+    OB_Result -->|"Start Tracking"| MainTabs
+
+    Home -->|"See All"| History
+    HomeEmpty -->|"Scan Food CTA"| ScanScreen
+    History -->|"tap meal"| EditMeal
+    EditMeal -->|"Save"| History
+    ScanResult -->|"Add to Diary"| Home
+    EditMeal -->|"Save from scan"| Home
+    LogoutModal -->|"Log Out confirmed"| Login
+
+    style AuthGroup fill:#BBDEFB,stroke:#1976D2
+    style OnboardingGroup fill:#C8E6C9,stroke:#388E3C
+    style HomeTab fill:#DCEDC8,stroke:#558B2F
+    style HistoryTab fill:#E1BEE7,stroke:#7B1FA2
+    style ScanTab fill:#FFE0B2,stroke:#E65100
+    style StatsTab fill:#B2EBF2,stroke:#00838F
+    style ProfileTab fill:#FCE4EC,stroke:#C62828
