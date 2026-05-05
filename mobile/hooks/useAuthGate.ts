@@ -1,6 +1,6 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter, useSegments } from 'expo-router';
-import { useIsAuthenticated } from '../stores/useAuthStore';
+import { useIsAuthenticated, useAuthStore } from '../stores/useAuthStore';
 import { useHasCompletedOnboarding } from '../stores/useProfileStore';
 
 export function useAuthGate(): void {
@@ -9,7 +9,20 @@ export function useAuthGate(): void {
   const segments = useSegments();
   const router = useRouter();
 
+  const [hasHydrated, setHasHydrated] = useState<boolean>(
+    () => useAuthStore.persist.hasHydrated(),
+  );
+
   useEffect(() => {
+    const unsub = useAuthStore.persist.onFinishHydration(() => {
+      setHasHydrated(true);
+    });
+    return unsub;
+  }, []);
+
+  useEffect(() => {
+    if (!hasHydrated) return;
+
     const inAuthGroup = segments[0] === '(auth)';
     const inOnboardingGroup = segments[0] === '(onboarding)';
 
@@ -33,5 +46,5 @@ export function useAuthGate(): void {
     } else if (hasCompletedOnboarding && inOnboardingGroup) {
       router.replace('/(tabs)');
     }
-  }, [isAuthenticated, hasCompletedOnboarding, segments, router]);
+  }, [isAuthenticated, hasCompletedOnboarding, segments, router, hasHydrated]);
 }
