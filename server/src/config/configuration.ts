@@ -7,4 +7,7 @@ export default () => ({
   jwt: {
     secret: process.env['JWT_SECRET'],
   },
+  openai: {
+    apiKey: process.env['OPENAI_API_KEY'] ?? '',
+  },
 });
