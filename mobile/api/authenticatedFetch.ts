@@ -9,7 +9,7 @@ export async function authenticatedFetch(
     fetch(`${API_BASE_URL}${path}`, {
       ...options,
       headers: {
-        'Content-Type': 'application/json',
+        ...(options.body !== undefined ? { 'Content-Type': 'application/json' } : {}),
         ...options.headers,
         Authorization: `Bearer ${token}`,
       },
@@ -25,8 +25,16 @@ export async function authenticatedFetch(
   try {
     await useAuthStore.getState().refreshTokens();
     const { accessToken: newToken } = useAuthStore.getState();
-    return makeRequest(newToken ?? '');
-  } catch {
+    const retryResponse = await makeRequest(newToken ?? '');
+    if (retryResponse.status === 401) {
+      await useAuthStore.getState().logout();
+      throw new Error('Session expired. Please log in again.');
+    }
+    return retryResponse;
+  } catch (err) {
+    if (err instanceof Error && err.message === 'Session expired. Please log in again.') {
+      throw err;
+    }
     await useAuthStore.getState().logout();
     throw new Error('Session expired. Please log in again.');
   }
