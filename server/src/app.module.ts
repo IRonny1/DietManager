@@ -5,9 +5,10 @@ import { ConfigModule } from './config/config.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { AuthModule } from './auth/auth.module';
 import { ProfileModule } from './profile/profile.module';
+import { ScanModule } from './scan/scan.module';
 
 @Module({
-  imports: [ConfigModule, PrismaModule, AuthModule, ProfileModule],
+  imports: [ConfigModule, PrismaModule, AuthModule, ProfileModule, ScanModule],
   controllers: [AppController],
   providers: [AppService],
 })
