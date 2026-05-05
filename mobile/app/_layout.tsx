@@ -58,10 +58,15 @@ function RootLayoutNav() {
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen
             name="profile-completion"
-            options={{
-              headerShown: false,
-              animation: 'slide_from_bottom',
-            }}
+            options={{ headerShown: false, animation: 'slide_from_bottom' }}
+          />
+          <Stack.Screen
+            name="scan-result"
+            options={{ title: 'Scan Result', headerBackTitle: 'Scan' }}
+          />
+          <Stack.Screen
+            name="edit-meal"
+            options={{ title: 'Edit Meal', headerBackTitle: 'Back' }}
           />
           <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
         </Stack>
