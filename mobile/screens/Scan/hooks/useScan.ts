@@ -1,7 +1,7 @@
 import { useRef, useState, useCallback } from 'react';
 import { useRouter } from 'expo-router';
 import { CameraView, useCameraPermissions } from 'expo-camera';
-import * as FileSystem from 'expo-file-system';
+import * as FileSystem from 'expo-file-system/legacy';
 
 import { analyzeFood, UnrecognizedFoodError } from '@/services/scan.service';
 import { useScanStore } from '@/stores/useScanStore';
@@ -13,7 +13,7 @@ type UseScanReturn = {
   isScanning: boolean;
   capturedImageUri: string | null;
   error: string | null;
-  cameraRef: React.RefObject<CameraView>;
+  cameraRef: React.RefObject<CameraView | null>;
   requestPermission: () => Promise<void>;
   capturePhoto: () => Promise<void>;
   handleManualEntry: () => void;

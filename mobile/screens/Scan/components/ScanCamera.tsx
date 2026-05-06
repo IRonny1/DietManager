@@ -4,7 +4,7 @@ import { CameraView } from 'expo-camera';
 import { palette } from '@/constants/Colors';
 
 type Props = {
-  cameraRef: React.RefObject<CameraView>;
+  cameraRef: React.RefObject<CameraView | null>;
   onCapture: () => Promise<void>;
   isScanning: boolean;
 };
