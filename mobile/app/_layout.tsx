@@ -81,6 +81,10 @@ function RootLayoutNav() {
             name="edit-profile"
             options={{ title: 'Edit Profile', headerShown: false }}
           />
+          <Stack.Screen
+            name="edit-my-goals"
+            options={{ title: 'Edit My Goals', headerShown: false }}
+          />
         </Stack>
       </ThemeProvider>
     </PaperProvider>
