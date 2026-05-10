@@ -75,6 +75,11 @@ export function History(): React.JSX.Element {
                 ))}
               </>
             )}
+            ListEmptyComponent={
+              <View style={styles.emptyState}>
+                <Text style={styles.emptyText}>No meals found</Text>
+              </View>
+            }
             contentContainerStyle={styles.list}
             showsVerticalScrollIndicator={false}
           />
@@ -114,4 +119,6 @@ const styles = StyleSheet.create({
   chipText: { fontSize: FONT_SIZE.SM },
   list: { paddingBottom: SPACING.XXL },
   center: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+  emptyState: { flex: 1, justifyContent: 'center', alignItems: 'center', paddingTop: SPACING.XXL },
+  emptyText: { fontSize: FONT_SIZE.MD, color: palette.textSecondary },
 });
