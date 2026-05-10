@@ -144,8 +144,9 @@ export function useHistory(): UseHistoryReturn {
   );
 
   const handleOpenDatePicker = useCallback((): void => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    router.push('/date-range-picker' as any);
+    // Route file exists at mobile/app/date-range-picker.tsx.
+    // Expo Router regenerates typed routes on `expo start`; run it once to clear the TS error below.
+    router.push('/date-range-picker');
   }, [router]);
 
   return {
