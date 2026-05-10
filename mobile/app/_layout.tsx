@@ -77,6 +77,10 @@ function RootLayoutNav() {
             name="logout-confirmation"
             options={{ presentation: 'transparentModal', headerShown: false, animation: 'fade' }}
           />
+          <Stack.Screen
+            name="edit-profile"
+            options={{ title: 'Edit Profile', headerShown: false }}
+          />
         </Stack>
       </ThemeProvider>
     </PaperProvider>
