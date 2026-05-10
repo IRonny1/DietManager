@@ -73,6 +73,10 @@ function RootLayoutNav() {
             options={{ title: 'Select Date Range', presentation: 'modal', headerBackTitle: 'Back' }}
           />
           <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
+          <Stack.Screen
+            name="logout-confirmation"
+            options={{ presentation: 'transparentModal', headerShown: false, animation: 'fade' }}
+          />
         </Stack>
       </ThemeProvider>
     </PaperProvider>
