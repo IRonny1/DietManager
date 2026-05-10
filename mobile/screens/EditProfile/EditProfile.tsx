@@ -13,13 +13,63 @@ import { Button, HelperText, Text, TextInput } from 'react-native-paper';
 import ChipSelector from '@/components/ChipSelector';
 import { palette } from '@/constants/Colors';
 import { GENDER_OPTIONS } from '@/constants/profile.constants';
+import { useAuthStore } from '@/stores/useAuthStore';
 
 import { useEditProfileForm } from './hooks/useEditProfileForm';
+
+type FormFieldProps = {
+  label: string;
+  value: string;
+  onChange: (val: string) => void;
+  onBlur: () => void;
+  error?: string;
+  disabled?: boolean;
+  keyboardType?: 'default' | 'email-address' | 'numeric';
+  autoCapitalize?: 'none' | 'sentences';
+  left?: React.ReactNode;
+  right?: React.ReactNode;
+};
+
+function FormField({
+  label,
+  value,
+  onChange,
+  onBlur,
+  error,
+  disabled,
+  keyboardType = 'default',
+  autoCapitalize = 'sentences',
+  left,
+  right,
+}: FormFieldProps): React.JSX.Element {
+  return (
+    <View style={styles.field}>
+      <TextInput
+        label={label}
+        value={value}
+        onChangeText={onChange}
+        onBlur={onBlur}
+        mode="outlined"
+        keyboardType={keyboardType}
+        autoCapitalize={autoCapitalize}
+        error={!!error}
+        disabled={disabled}
+        left={left}
+        right={right}
+        style={styles.input}
+        outlineColor={palette.border}
+        activeOutlineColor={palette.primary}
+      />
+      {error && <HelperText type="error">{error}</HelperText>}
+    </View>
+  );
+}
 
 export default function EditProfileScreen(): React.JSX.Element {
   const { form, isSubmitting, serverError, onSubmit } = useEditProfileForm();
   const { control, formState, setValue, watch } = form;
   const genderValue = watch('gender');
+  const userEmail = useAuthStore((state) => state.user?.email ?? '');
 
   return (
     <KeyboardAvoidingView
@@ -54,84 +104,48 @@ export default function EditProfileScreen(): React.JSX.Element {
         )}
 
         {/* Name */}
-        <View style={styles.field}>
-          <Controller
-            control={control}
-            name="firstName"
-            render={({ field: { onChange, onBlur, value } }) => (
-              <>
-                <TextInput
-                  label="First Name"
-                  value={value}
-                  onChangeText={onChange}
-                  onBlur={onBlur}
-                  mode="outlined"
-                  error={!!formState.errors.firstName}
-                  disabled={isSubmitting}
-                  style={styles.input}
-                  outlineColor={palette.border}
-                  activeOutlineColor={palette.primary}
-                />
-                {formState.errors.firstName && (
-                  <HelperText type="error">{formState.errors.firstName.message}</HelperText>
-                )}
-              </>
-            )}
-          />
-        </View>
+        <Controller
+          control={control}
+          name="firstName"
+          render={({ field: { onChange, onBlur, value } }) => (
+            <FormField
+              label="First Name"
+              value={value}
+              onChange={onChange}
+              onBlur={onBlur}
+              error={formState.errors.firstName?.message}
+              disabled={isSubmitting}
+            />
+          )}
+        />
 
-        <View style={styles.field}>
-          <Controller
-            control={control}
-            name="lastName"
-            render={({ field: { onChange, onBlur, value } }) => (
-              <>
-                <TextInput
-                  label="Last Name"
-                  value={value}
-                  onChangeText={onChange}
-                  onBlur={onBlur}
-                  mode="outlined"
-                  error={!!formState.errors.lastName}
-                  disabled={isSubmitting}
-                  style={styles.input}
-                  outlineColor={palette.border}
-                  activeOutlineColor={palette.primary}
-                />
-                {formState.errors.lastName && (
-                  <HelperText type="error">{formState.errors.lastName.message}</HelperText>
-                )}
-              </>
-            )}
-          />
-        </View>
+        <Controller
+          control={control}
+          name="lastName"
+          render={({ field: { onChange, onBlur, value } }) => (
+            <FormField
+              label="Last Name"
+              value={value}
+              onChange={onChange}
+              onBlur={onBlur}
+              error={formState.errors.lastName?.message}
+              disabled={isSubmitting}
+            />
+          )}
+        />
 
+        {/* Email (read-only) */}
         <View style={styles.field}>
-          <Controller
-            control={control}
-            name="email"
-            render={({ field: { onChange, onBlur, value } }) => (
-              <>
-                <TextInput
-                  label="Email"
-                  value={value}
-                  onChangeText={onChange}
-                  onBlur={onBlur}
-                  mode="outlined"
-                  keyboardType="email-address"
-                  autoCapitalize="none"
-                  error={!!formState.errors.email}
-                  disabled={isSubmitting}
-                  style={styles.input}
-                  outlineColor={palette.border}
-                  activeOutlineColor={palette.primary}
-                />
-                {formState.errors.email && (
-                  <HelperText type="error">{formState.errors.email.message}</HelperText>
-                )}
-              </>
-            )}
+          <TextInput
+            label="Email"
+            value={userEmail}
+            mode="outlined"
+            disabled
+            style={styles.input}
+            outlineColor={palette.border}
+            activeOutlineColor={palette.primary}
           />
+          <HelperText type="info">Email cannot be changed here</HelperText>
         </View>
 
         {/* Body Info Section */}
@@ -139,33 +153,21 @@ export default function EditProfileScreen(): React.JSX.Element {
           Body Info
         </Text>
 
-        <View style={styles.field}>
-          <Controller
-            control={control}
-            name="dateOfBirth"
-            render={({ field: { onChange, onBlur, value } }) => (
-              <>
-                <TextInput
-                  label="Date of Birth (YYYY-MM-DD)"
-                  value={value}
-                  onChangeText={onChange}
-                  onBlur={onBlur}
-                  mode="outlined"
-                  placeholder="1990-01-15"
-                  error={!!formState.errors.dateOfBirth}
-                  disabled={isSubmitting}
-                  left={<TextInput.Icon icon="calendar" />}
-                  style={styles.input}
-                  outlineColor={palette.border}
-                  activeOutlineColor={palette.primary}
-                />
-                {formState.errors.dateOfBirth && (
-                  <HelperText type="error">{formState.errors.dateOfBirth.message}</HelperText>
-                )}
-              </>
-            )}
-          />
-        </View>
+        <Controller
+          control={control}
+          name="dateOfBirth"
+          render={({ field: { onChange, onBlur, value } }) => (
+            <FormField
+              label="Date of Birth (YYYY-MM-DD)"
+              value={value}
+              onChange={onChange}
+              onBlur={onBlur}
+              error={formState.errors.dateOfBirth?.message}
+              disabled={isSubmitting}
+              left={<TextInput.Icon icon="calendar" />}
+            />
+          )}
+        />
 
         <View style={styles.field}>
           <Text variant="bodySmall" style={styles.fieldLabel}>
@@ -185,61 +187,39 @@ export default function EditProfileScreen(): React.JSX.Element {
           )}
         </View>
 
-        <View style={styles.field}>
-          <Controller
-            control={control}
-            name="heightCm"
-            render={({ field: { onChange, onBlur, value } }) => (
-              <>
-                <TextInput
-                  label="Height (cm)"
-                  value={value}
-                  onChangeText={onChange}
-                  onBlur={onBlur}
-                  mode="outlined"
-                  keyboardType="numeric"
-                  error={!!formState.errors.heightCm}
-                  disabled={isSubmitting}
-                  right={<TextInput.Affix text="cm" />}
-                  style={styles.input}
-                  outlineColor={palette.border}
-                  activeOutlineColor={palette.primary}
-                />
-                {formState.errors.heightCm && (
-                  <HelperText type="error">{formState.errors.heightCm.message}</HelperText>
-                )}
-              </>
-            )}
-          />
-        </View>
+        <Controller
+          control={control}
+          name="heightCm"
+          render={({ field: { onChange, onBlur, value } }) => (
+            <FormField
+              label="Height (cm)"
+              value={value}
+              onChange={onChange}
+              onBlur={onBlur}
+              error={formState.errors.heightCm?.message}
+              disabled={isSubmitting}
+              keyboardType="numeric"
+              right={<TextInput.Affix text="cm" />}
+            />
+          )}
+        />
 
-        <View style={styles.field}>
-          <Controller
-            control={control}
-            name="weightKg"
-            render={({ field: { onChange, onBlur, value } }) => (
-              <>
-                <TextInput
-                  label="Weight (kg)"
-                  value={value}
-                  onChangeText={onChange}
-                  onBlur={onBlur}
-                  mode="outlined"
-                  keyboardType="numeric"
-                  error={!!formState.errors.weightKg}
-                  disabled={isSubmitting}
-                  right={<TextInput.Affix text="kg" />}
-                  style={styles.input}
-                  outlineColor={palette.border}
-                  activeOutlineColor={palette.primary}
-                />
-                {formState.errors.weightKg && (
-                  <HelperText type="error">{formState.errors.weightKg.message}</HelperText>
-                )}
-              </>
-            )}
-          />
-        </View>
+        <Controller
+          control={control}
+          name="weightKg"
+          render={({ field: { onChange, onBlur, value } }) => (
+            <FormField
+              label="Weight (kg)"
+              value={value}
+              onChange={onChange}
+              onBlur={onBlur}
+              error={formState.errors.weightKg?.message}
+              disabled={isSubmitting}
+              keyboardType="numeric"
+              right={<TextInput.Affix text="kg" />}
+            />
+          )}
+        />
       </ScrollView>
     </KeyboardAvoidingView>
   );

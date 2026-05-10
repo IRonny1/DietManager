@@ -11,12 +11,10 @@ import {
   PROFILE_VALIDATION_MESSAGES,
 } from '@/constants/profile.constants';
 import { useProfileStore } from '@/stores/useProfileStore';
-import type { MeasurementSystem } from '@/types/profile.types';
 
 const editProfileSchema = z.object({
   firstName: z.string().min(2, 'First name must be at least 2 characters'),
   lastName: z.string().min(2, 'Last name must be at least 2 characters'),
-  email: z.string().email('Please enter a valid email address'),
   dateOfBirth: z.string().min(1, PROFILE_VALIDATION_MESSAGES.DATE_OF_BIRTH_REQUIRED),
   gender: z.string().min(1, PROFILE_VALIDATION_MESSAGES.GENDER_REQUIRED),
   heightCm: z
@@ -45,7 +43,6 @@ export type EditProfileFormValues = z.infer<typeof editProfileSchema>;
 
 type UseEditProfileFormReturn = {
   form: UseFormReturn<EditProfileFormValues>;
-  measurementSystem: MeasurementSystem;
   isSubmitting: boolean;
   serverError: string | null;
   onSubmit: () => Promise<void>;
@@ -54,7 +51,6 @@ type UseEditProfileFormReturn = {
 export function useEditProfileForm(): UseEditProfileFormReturn {
   const router = useRouter();
   const profile = useProfileStore((state) => state.profile);
-  const measurementSystem = useProfileStore((state) => state.measurementSystem);
   const updateProfile = useProfileStore((state) => state.updateProfile);
 
   const form = useForm<EditProfileFormValues>({
@@ -62,7 +58,6 @@ export function useEditProfileForm(): UseEditProfileFormReturn {
     defaultValues: {
       firstName: profile?.firstName ?? '',
       lastName: profile?.lastName ?? '',
-      email: '',
       dateOfBirth: profile?.basicBodyInfo?.dateOfBirth ?? '',
       gender: profile?.basicBodyInfo?.gender ?? '',
       heightCm: profile?.basicBodyInfo?.heightCm ? String(profile.basicBodyInfo.heightCm) : '',
@@ -109,7 +104,6 @@ export function useEditProfileForm(): UseEditProfileFormReturn {
 
   return {
     form,
-    measurementSystem,
     isSubmitting,
     serverError,
     onSubmit,
