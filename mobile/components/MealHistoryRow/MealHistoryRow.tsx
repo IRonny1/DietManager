@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { Text } from 'react-native-paper';
 import { palette } from '@/constants/Colors';
 import { SPACING } from '@/constants/spacing.constants';
@@ -19,7 +19,11 @@ function formatTime(isoString: string): string {
 export function MealHistoryRow({ meal, onPress }: MealHistoryRowProps): React.JSX.Element {
   return (
     <TouchableOpacity style={styles.container} onPress={onPress} activeOpacity={0.7}>
-      <View style={styles.thumbnail} />
+      {meal.imageUri ? (
+        <Image source={{ uri: meal.imageUri }} style={styles.thumbnail} resizeMode="cover" />
+      ) : (
+        <View style={styles.thumbnail} />
+      )}
       <View style={styles.info}>
         <Text style={styles.name} numberOfLines={1}>
           {meal.name}
