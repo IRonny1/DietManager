@@ -38,6 +38,7 @@ export function Statistics(): React.JSX.Element {
     handleMacroFilterChange,
     handlePeriodPrevious,
     handlePeriodNext,
+    handleRetry,
     handleAddWeightEntry,
     handleViewAllWeightEntries,
   } = useStatistics();
@@ -92,9 +93,9 @@ export function Statistics(): React.JSX.Element {
           <ActivityIndicator size="large" color={palette.primary} />
         </View>
       ) : error ? (
-        <View style={styles.center}>
+        <TouchableOpacity style={styles.center} onPress={handleRetry}>
           <Text style={styles.errorText}>{error}</Text>
-        </View>
+        </TouchableOpacity>
       ) : (
         <ScrollView
           contentContainerStyle={styles.scroll}

@@ -27,9 +27,17 @@ export type UseStatisticsReturn = {
   handleMacroFilterChange: (macro: MacroFilter) => void;
   handlePeriodPrevious: () => void;
   handlePeriodNext: () => void;
+  handleRetry: () => void;
   handleAddWeightEntry: () => void;
   handleViewAllWeightEntries: () => void;
 };
+
+function toLocalDateStr(date: Date): string {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, '0');
+  const d = String(date.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
+}
 
 function getDateRange(period: DatePeriod, offset: number): { from: string; to: string } {
   const now = new Date();
@@ -41,8 +49,8 @@ function getDateRange(period: DatePeriod, offset: number): { from: string; to: s
     const end = new Date(start);
     end.setDate(start.getDate() + 6);
     return {
-      from: start.toISOString().split('T')[0],
-      to: end.toISOString().split('T')[0],
+      from: toLocalDateStr(start),
+      to: toLocalDateStr(end),
     };
   }
   const rawMonth = now.getMonth() + offset;
@@ -51,8 +59,8 @@ function getDateRange(period: DatePeriod, offset: number): { from: string; to: s
   const start = new Date(year, month, 1);
   const end = new Date(year, month + 1, 0);
   return {
-    from: start.toISOString().split('T')[0],
-    to: end.toISOString().split('T')[0],
+    from: toLocalDateStr(start),
+    to: toLocalDateStr(end),
   };
 }
 
@@ -116,23 +124,20 @@ export function useStatistics(): UseStatisticsReturn {
     (period: DatePeriod): void => {
       setActivePeriod(period);
       setPeriodOffset(0);
-      fetchStats(period, 0);
     },
-    [fetchStats],
+    [],
   );
 
   const handlePeriodPrevious = useCallback((): void => {
     const next = periodOffset - 1;
     setPeriodOffset(next);
-    fetchStats(activePeriod, next);
-  }, [periodOffset, activePeriod, fetchStats]);
+  }, [periodOffset]);
 
   const handlePeriodNext = useCallback((): void => {
     if (periodOffset >= 0) return;
     const next = periodOffset + 1;
     setPeriodOffset(next);
-    fetchStats(activePeriod, next);
-  }, [periodOffset, activePeriod, fetchStats]);
+  }, [periodOffset]);
 
   return {
     activeTab,
@@ -149,6 +154,7 @@ export function useStatistics(): UseStatisticsReturn {
     handleMacroFilterChange: setActiveMacroFilter,
     handlePeriodPrevious,
     handlePeriodNext,
+    handleRetry: () => { fetchStats(activePeriod, periodOffset); },
     handleAddWeightEntry: () => router.push('/modal'),
     handleViewAllWeightEntries: () => router.push('/modal'),
   };
