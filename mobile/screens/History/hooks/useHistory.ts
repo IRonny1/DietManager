@@ -1,5 +1,5 @@
 // mobile/screens/History/hooks/useHistory.ts
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { useRouter, useFocusEffect } from 'expo-router';
 import { getMeals } from '@/services/diary.service';
 import { useDateRangeStore } from '@/stores/useDateRangeStore';
@@ -34,7 +34,9 @@ function getDateRange(
 
   if (filter === 'week') {
     const start = new Date(today);
-    start.setDate(today.getDate() - today.getDay());
+    const dayOfWeek = today.getDay(); // 0 = Sun, 1 = Mon, ...
+    const daysToMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+    start.setDate(today.getDate() - daysToMonday);
     return { from: start.toISOString().split('T')[0], to: todayStr };
   }
 
@@ -81,6 +83,12 @@ export function useHistory(): UseHistoryReturn {
   const [customDateRange, setCustomDateRange] = useState<{ from: string; to: string } | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
+  // Refs so useFocusEffect can read current values without listing them as deps
+  const activeFilterRef = useRef<DateFilter>('today');
+  const customDateRangeRef = useRef<{ from: string; to: string } | null>(null);
+  activeFilterRef.current = activeFilter;
+  customDateRangeRef.current = customDateRange;
+
   const fetchMeals = useCallback(
     async (filter: DateFilter, customRange: { from: string; to: string } | null): Promise<void> => {
       setIsLoading(true);
@@ -98,14 +106,15 @@ export function useHistory(): UseHistoryReturn {
   useFocusEffect(
     useCallback(() => {
       if (confirmedRange) {
-        setCustomDateRange(confirmedRange);
+        const range = confirmedRange;
+        setCustomDateRange(range);
         setActiveFilter('custom');
         setConfirmedRange(null);
-        void fetchMeals('custom', confirmedRange);
+        void fetchMeals('custom', range);
       } else {
-        void fetchMeals(activeFilter, customDateRange);
+        void fetchMeals(activeFilterRef.current, customDateRangeRef.current);
       }
-    }, [confirmedRange, setConfirmedRange, fetchMeals, activeFilter, customDateRange]),
+    }, [confirmedRange, setConfirmedRange, fetchMeals]),
   );
 
   const filtered = searchQuery.trim()
@@ -120,10 +129,11 @@ export function useHistory(): UseHistoryReturn {
 
   const handleFilterChange = useCallback(
     (filter: DateFilter): void => {
+      if (filter !== 'custom') setCustomDateRange(null);
       setActiveFilter(filter);
-      void fetchMeals(filter, customDateRange);
+      void fetchMeals(filter, filter === 'custom' ? customDateRangeRef.current : null);
     },
-    [fetchMeals, customDateRange],
+    [fetchMeals],
   );
 
   const handleMealPress = useCallback(
