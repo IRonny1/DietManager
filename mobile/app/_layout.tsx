@@ -68,6 +68,10 @@ function RootLayoutNav() {
             name="edit-meal"
             options={{ title: 'Edit Meal', headerBackTitle: 'Back' }}
           />
+          <Stack.Screen
+            name="date-range-picker"
+            options={{ title: 'Select Date Range', presentation: 'modal', headerBackTitle: 'Back' }}
+          />
           <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
         </Stack>
       </ThemeProvider>
