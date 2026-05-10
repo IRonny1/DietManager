@@ -113,7 +113,10 @@ export function useEditMyGoalsForm(): UseEditMyGoalsFormReturn {
       if (bodyInfo && values.primaryGoal && values.activityLevel && isNaN(parsedCalorie)) {
         const dob = new Date(bodyInfo.dateOfBirth);
         const age = Math.floor((Date.now() - dob.getTime()) / (365.25 * 24 * 3600 * 1000));
-        const bmr = calculateBMR(bodyInfo.weightKg, bodyInfo.heightCm, age, bodyInfo.gender as 'male' | 'female' | 'other');
+        const validGender = (['male', 'female', 'other'] as const).includes(
+          bodyInfo.gender as 'male' | 'female' | 'other'
+        ) ? (bodyInfo.gender as 'male' | 'female' | 'other') : ('other' as const);
+        const bmr = calculateBMR(bodyInfo.weightKg, bodyInfo.heightCm, age, validGender);
         const tdee = calculateTDEE(bmr, values.activityLevel as ActivityLevel);
         const adjustment = PROFILE_GOAL_CALORIE_ADJUSTMENTS[values.primaryGoal as PrimaryGoal] ?? 0;
         finalCalorieGoal = Math.max(1200, tdee + adjustment);
