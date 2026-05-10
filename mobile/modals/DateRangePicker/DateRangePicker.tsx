@@ -48,7 +48,7 @@ export function DateRangePicker(): React.JSX.Element {
   const weeks = chunkIntoWeeks(buildDaysGrid(year, month));
 
   return (
-    <SafeAreaView style={styles.safe}>
+    <SafeAreaView style={styles.safe} edges={['top']}>
       <View style={styles.container}>
         <View style={styles.header}>
           <TouchableOpacity onPress={handlePrevMonth} style={styles.navBtn} activeOpacity={0.7}>
@@ -73,9 +73,7 @@ export function DateRangePicker(): React.JSX.Element {
             {week.map((dateStr, di) => {
               if (!dateStr) return <View key={di} style={styles.dayCell} />;
 
-              const isStart = dateStr === startDate;
-              const isEnd = dateStr === endDate;
-              const selected = isStart || isEnd;
+              const selected = dateStr === startDate || dateStr === endDate;
               const inRange =
                 !!startDate &&
                 !!endDate &&

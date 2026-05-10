@@ -24,7 +24,7 @@ export function useDateRangePicker(): UseDateRangePickerReturn {
 
   const handleDayPress = useCallback(
     (dateStr: string): void => {
-      if (!startDate || (startDate && endDate)) {
+      if (!startDate || !!endDate) {
         setStartDate(dateStr);
         setEndDate(null);
       } else if (dateStr < startDate) {
