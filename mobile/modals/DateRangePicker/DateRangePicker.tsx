@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
     borderRadius: 0,
   },
   selectedDay: { backgroundColor: palette.primary, borderRadius: 18 },
-  selectedDayText: { color: palette.white, fontWeight: FONT_WEIGHT.BOLD },
+  selectedDayText: { color: palette.bgPage, fontWeight: FONT_WEIGHT.BOLD },
   rangeDisplay: {
     flexDirection: 'row',
     justifyContent: 'center',

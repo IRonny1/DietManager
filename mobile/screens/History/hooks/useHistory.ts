@@ -17,10 +17,12 @@ type UseHistoryReturn = {
   searchQuery: string;
   activeFilter: DateFilter;
   isLoading: boolean;
+  error: string | null;
   handleSearchChange: (query: string) => void;
   handleFilterChange: (filter: DateFilter) => void;
   handleMealPress: (meal: MealEntry) => void;
   handleOpenDatePicker: () => void;
+  handleRetry: () => void;
 };
 
 function getDateRange(
@@ -82,6 +84,7 @@ export function useHistory(): UseHistoryReturn {
   const [activeFilter, setActiveFilter] = useState<DateFilter>('today');
   const [customDateRange, setCustomDateRange] = useState<{ from: string; to: string } | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   // Refs so useFocusEffect can read current values without listing them as deps
   const activeFilterRef = useRef<DateFilter>('today');
@@ -92,10 +95,13 @@ export function useHistory(): UseHistoryReturn {
   const fetchMeals = useCallback(
     async (filter: DateFilter, customRange: { from: string; to: string } | null): Promise<void> => {
       setIsLoading(true);
+      setError(null);
       try {
         const range = getDateRange(filter, customRange);
         const data = await getMeals(range);
         setMeals(data);
+      } catch {
+        setError('Failed to load meals. Tap to retry.');
       } finally {
         setIsLoading(false);
       }
@@ -149,14 +155,20 @@ export function useHistory(): UseHistoryReturn {
     router.push('/date-range-picker');
   }, [router]);
 
+  const handleRetry = useCallback((): void => {
+    void fetchMeals(activeFilterRef.current, customDateRangeRef.current);
+  }, [fetchMeals]);
+
   return {
     groupedMeals,
     searchQuery,
     activeFilter,
     isLoading,
+    error,
     handleSearchChange,
     handleFilterChange,
     handleMealPress,
     handleOpenDatePicker,
+    handleRetry,
   };
 }

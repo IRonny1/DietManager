@@ -26,10 +26,12 @@ export function History(): React.JSX.Element {
     searchQuery,
     activeFilter,
     isLoading,
+    error,
     handleSearchChange,
     handleFilterChange,
     handleMealPress,
     handleOpenDatePicker,
+    handleRetry,
   } = useHistory();
 
   return (
@@ -62,6 +64,12 @@ export function History(): React.JSX.Element {
         {isLoading ? (
           <View style={styles.center}>
             <ActivityIndicator size="large" color={palette.primary} />
+          </View>
+        ) : error ? (
+          <View style={styles.center}>
+            <Text style={styles.emptyText} onPress={handleRetry}>
+              {error}
+            </Text>
           </View>
         ) : (
           <FlatList<GroupedMeals>
