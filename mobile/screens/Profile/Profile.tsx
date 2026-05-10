@@ -105,7 +105,7 @@ export default function ProfileScreen(): React.JSX.Element {
       {/* Quick Links */}
       <TouchableOpacity style={styles.linkRow} onPress={handleWaterTracking}>
         <View style={styles.linkLeft}>
-          <Text style={styles.linkIcon}>💧</Text>
+          <MaterialCommunityIcons name="water" size={20} color={palette.primary} />
           <Text variant="bodyLarge" style={styles.linkText}>
             Water Tracking
           </Text>
@@ -115,7 +115,7 @@ export default function ProfileScreen(): React.JSX.Element {
 
       <TouchableOpacity style={styles.linkRow} onPress={handleWeightLog}>
         <View style={styles.linkLeft}>
-          <Text style={styles.linkIcon}>⚖️</Text>
+          <MaterialCommunityIcons name="scale" size={20} color={palette.primary} />
           <Text variant="bodyLarge" style={styles.linkText}>
             Weight Log
           </Text>
@@ -251,9 +251,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
-  },
-  linkIcon: {
-    fontSize: 20,
   },
   linkText: {
     color: palette.textPrimary,

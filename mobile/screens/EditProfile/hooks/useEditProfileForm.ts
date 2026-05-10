@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm, type UseFormReturn } from 'react-hook-form';
@@ -65,6 +65,18 @@ export function useEditProfileForm(): UseEditProfileFormReturn {
     },
     mode: 'onBlur',
   });
+
+  useEffect(() => {
+    if (profile === null) return;
+    form.reset({
+      firstName: profile.firstName ?? '',
+      lastName: profile.lastName ?? '',
+      dateOfBirth: profile.basicBodyInfo?.dateOfBirth ?? '',
+      gender: profile.basicBodyInfo?.gender ?? '',
+      heightCm: profile.basicBodyInfo?.heightCm ? String(profile.basicBodyInfo.heightCm) : '',
+      weightKg: profile.basicBodyInfo?.weightKg ? String(profile.basicBodyInfo.weightKg) : '',
+    });
+  }, [profile]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const [serverError, setServerError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);

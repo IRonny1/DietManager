@@ -85,6 +85,8 @@ function RootLayoutNav() {
             name="edit-my-goals"
             options={{ title: 'Edit My Goals', headerShown: false }}
           />
+          <Stack.Screen name="water-tracking" options={{ title: 'Water Tracking' }} />
+          <Stack.Screen name="weight-log" options={{ title: 'Weight Log' }} />
         </Stack>
       </ThemeProvider>
     </PaperProvider>
