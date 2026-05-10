@@ -72,6 +72,19 @@ export async function logout(refreshToken: string): Promise<void> {
   }
 }
 
+export async function forgotPassword(email: string): Promise<void> {
+  const response = await fetch(`${AUTH_BASE_URL}/auth/forgot-password`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email }),
+  });
+
+  if (!response.ok) {
+    const message = await parseErrorMessage(response, 'Failed to send reset email. Please try again.');
+    throw new Error(message);
+  }
+}
+
 export async function getMe(accessToken: string): Promise<User> {
   const response = await fetch(`${AUTH_BASE_URL}/auth/me`, {
     method: 'GET',

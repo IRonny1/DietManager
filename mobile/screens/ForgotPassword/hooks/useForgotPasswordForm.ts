@@ -3,6 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useState } from 'react';
 import { useRouter } from 'expo-router';
+import { forgotPassword } from '@/services/auth.service';
 
 const schema = z.object({
   email: z.string().min(1, 'Email is required').email('Invalid email address'),
@@ -29,7 +30,7 @@ export function useForgotPasswordForm(): UseForgotPasswordFormReturn {
   const onSubmit = form.handleSubmit(async (data) => {
     setIsSubmitting(true);
     try {
-      await new Promise((r) => setTimeout(r, 1000));
+      await forgotPassword(data.email);
       router.push({ pathname: '/(auth)/forgot-password-sent', params: { email: data.email } });
     } finally {
       setIsSubmitting(false);

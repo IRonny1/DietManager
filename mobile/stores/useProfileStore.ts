@@ -147,7 +147,6 @@ export const useProfileStore = create<ProfileStore>((set, get) => ({
   },
 
   resetProfile: (): void => {
-    profileService.resetMockProfile();
     set(initialState);
   },
 

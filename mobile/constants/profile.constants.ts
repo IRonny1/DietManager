@@ -7,8 +7,6 @@ import type {
 
 import type { WizardStepConfig } from '@/screens/ProfileCompletion/types/profileCompletion.types';
 
-export const PROFILE_MOCK_DELAY_MS = 800;
-
 export const WIZARD_STEPS: WizardStepConfig[] = [
   {
     id: 'basic_body_info',
