@@ -53,10 +53,13 @@ export type Goals = {
 };
 
 export type UserProfile = {
+  firstName: string | null;
+  lastName: string | null;
   basicBodyInfo: BasicBodyInfo | null;
   healthConditions: HealthConditions | null;
   dietPreferences: DietPreferences | null;
   goals: Goals | null;
+  calorieGoal: number | null;
   isComplete: boolean;
   completionPercentage: number;
   updatedAt: string;

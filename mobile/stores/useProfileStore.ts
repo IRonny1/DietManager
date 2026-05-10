@@ -32,6 +32,7 @@ type ProfileActions = {
   resetProfile: () => void;
   setOnboardingData: (partial: Partial<OnboardingData>) => void;
   completeOnboarding: () => void;
+  updateProfile: (partial: Partial<UserProfile>) => void;
 };
 
 type ProfileStore = ProfileState & ProfileActions;
@@ -157,6 +158,12 @@ export const useProfileStore = create<ProfileStore>((set, get) => ({
 
   completeOnboarding: () =>
     set({ hasCompletedOnboarding: true }),
+
+  updateProfile: (partial: Partial<UserProfile>): void => {
+    const current = get().profile;
+    if (current === null) return;
+    set({ profile: { ...current, ...partial } });
+  },
 }));
 
 export function useProfile(): UserProfile | null {
