@@ -162,7 +162,32 @@ export const useProfileStore = create<ProfileStore>((set, get) => ({
   updateProfile: (partial: Partial<UserProfile>): void => {
     const current = get().profile;
     if (current === null) return;
-    set({ profile: { ...current, ...partial } });
+    set({
+      profile: {
+        ...current,
+        ...partial,
+        ...(partial.basicBodyInfo !== undefined && {
+          basicBodyInfo: current.basicBodyInfo !== null
+            ? { ...current.basicBodyInfo, ...partial.basicBodyInfo }
+            : partial.basicBodyInfo,
+        }),
+        ...(partial.goals !== undefined && {
+          goals: current.goals !== null
+            ? { ...current.goals, ...partial.goals }
+            : partial.goals,
+        }),
+        ...(partial.healthConditions !== undefined && {
+          healthConditions: current.healthConditions !== null
+            ? { ...current.healthConditions, ...partial.healthConditions }
+            : partial.healthConditions,
+        }),
+        ...(partial.dietPreferences !== undefined && {
+          dietPreferences: current.dietPreferences !== null
+            ? { ...current.dietPreferences, ...partial.dietPreferences }
+            : partial.dietPreferences,
+        }),
+      },
+    });
   },
 }));
 
