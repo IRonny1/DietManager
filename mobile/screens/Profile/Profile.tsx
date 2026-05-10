@@ -1,162 +1,135 @@
 import React from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 
-import { Button, Divider, List, Text } from 'react-native-paper';
+import { Text } from 'react-native-paper';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 import { palette } from '@/constants/Colors';
 
-import ProfileCompletionBanner from './components/ProfileCompletionBanner';
 import { useProfile } from './hooks/useProfile';
 
 export default function ProfileScreen(): React.JSX.Element {
   const {
     user,
     profile,
-    isLoading,
-    completionPercentage,
-    isProfileComplete,
+    avatarInitials,
+    calorieGoal,
+    primaryGoal,
+    activityLevel,
     handleEditProfile,
-    handleLogout,
+    handleEditGoals,
+    handleWaterTracking,
+    handleWeightLog,
+    handleLogOut,
   } = useProfile();
+
+  const displayName =
+    profile?.firstName && profile?.lastName
+      ? `${profile.firstName} ${profile.lastName}`
+      : user?.email ?? '';
 
   return (
     <ScrollView
       contentContainerStyle={styles.scrollContent}
       showsVerticalScrollIndicator={false}
     >
-      {/* User Info Card */}
-      <View style={styles.userCard}>
-        <View style={styles.avatar}>
-          <Text style={styles.avatarText}>
-            {user?.email?.[0]?.toUpperCase() ?? '?'}
+      <Text variant="headlineMedium" style={styles.pageTitle}>
+        Profile
+      </Text>
+
+      {/* User Card */}
+      <View style={styles.card}>
+        <View style={styles.userRow}>
+          <View style={styles.avatar}>
+            <Text style={styles.avatarText}>{avatarInitials}</Text>
+          </View>
+          <View style={styles.userInfo}>
+            <Text variant="titleMedium" style={styles.userName}>
+              {displayName}
+            </Text>
+            <Text variant="bodySmall" style={styles.userEmail}>
+              {user?.email}
+            </Text>
+            <TouchableOpacity onPress={handleEditProfile} style={styles.editLink}>
+              <MaterialCommunityIcons name="pencil" size={14} color={palette.primary} />
+              <Text variant="bodySmall" style={styles.editLinkText}>
+                Edit Profile
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+
+      {/* My Goals */}
+      <View style={styles.sectionHeader}>
+        <Text variant="titleMedium" style={styles.sectionTitle}>
+          My Goals
+        </Text>
+        <TouchableOpacity onPress={handleEditGoals} style={styles.editGoalsLink}>
+          <Text variant="bodySmall" style={styles.editGoalsText}>
+            Edit
+          </Text>
+          <MaterialCommunityIcons name="chevron-right" size={16} color={palette.primary} />
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.goalsCard}>
+        <View style={styles.goalStat}>
+          <Text variant="titleLarge" style={styles.goalValue}>
+            {calorieGoal > 0 ? calorieGoal.toLocaleString() : '—'}
+          </Text>
+          <Text variant="bodySmall" style={styles.goalLabel}>
+            Cal Goal
           </Text>
         </View>
-        <Text variant="titleLarge" style={styles.userName}>
-          {user?.email}
-        </Text>
-        <Text variant="bodyMedium" style={styles.userEmail}>
-          {user?.email}
-        </Text>
-      </View>
-
-      {/* Completion Banner (if not complete) */}
-      {!isProfileComplete && (
-        <View style={styles.bannerSection}>
-          <ProfileCompletionBanner completionPercentage={completionPercentage} />
+        <View style={styles.goalDivider} />
+        <View style={styles.goalStat}>
+          <Text variant="titleMedium" style={styles.goalValue}>
+            {primaryGoal}
+          </Text>
+          <Text variant="bodySmall" style={styles.goalLabel}>
+            Goal
+          </Text>
         </View>
-      )}
-
-      {/* Profile Sections */}
-      <View style={styles.sectionsContainer}>
-        <Text variant="titleMedium" style={styles.sectionHeader}>
-          Profile Details
-        </Text>
-
-        <View style={styles.listCard}>
-          <List.Item
-            title="Body Info"
-            description={
-              profile?.basicBodyInfo
-                ? `${profile.basicBodyInfo.weightKg}kg, ${profile.basicBodyInfo.heightCm}cm`
-                : 'Not set'
-            }
-            left={(props) => <List.Icon {...props} icon="human-male-height" />}
-            right={(props) => <List.Icon {...props} icon="chevron-right" />}
-            onPress={handleEditProfile}
-            style={styles.listItem}
-          />
-          <Divider />
-
-          <List.Item
-            title="Health & Allergies"
-            description={
-              profile?.healthConditions
-                ? `${profile.healthConditions.allergies.length} allergies, ${profile.healthConditions.medicalConditions.length} conditions`
-                : 'Not set'
-            }
-            left={(props) => <List.Icon {...props} icon="medical-bag" />}
-            right={(props) => <List.Icon {...props} icon="chevron-right" />}
-            onPress={handleEditProfile}
-            style={styles.listItem}
-          />
-          <Divider />
-
-          <List.Item
-            title="Diet Preferences"
-            description={
-              profile?.dietPreferences
-                ? profile.dietPreferences.dietType.replace(/_/g, ' ')
-                : 'Not set'
-            }
-            left={(props) => <List.Icon {...props} icon="food-apple" />}
-            right={(props) => <List.Icon {...props} icon="chevron-right" />}
-            onPress={handleEditProfile}
-            style={styles.listItem}
-            titleStyle={styles.listItemTitle}
-          />
-          <Divider />
-
-          <List.Item
-            title="Goals"
-            description={
-              profile?.goals
-                ? profile.goals.primaryGoal.replace(/_/g, ' ')
-                : 'Not set'
-            }
-            left={(props) => <List.Icon {...props} icon="target" />}
-            right={(props) => <List.Icon {...props} icon="chevron-right" />}
-            onPress={handleEditProfile}
-            style={styles.listItem}
-            titleStyle={styles.listItemTitle}
-          />
+        <View style={styles.goalDivider} />
+        <View style={styles.goalStat}>
+          <Text variant="titleMedium" style={styles.goalValue}>
+            {activityLevel}
+          </Text>
+          <Text variant="bodySmall" style={styles.goalLabel}>
+            Lifestyle
+          </Text>
         </View>
       </View>
 
-      {/* Settings Section */}
-      <View style={styles.sectionsContainer}>
-        <Text variant="titleMedium" style={styles.sectionHeader}>
-          Settings
-        </Text>
-
-        <View style={styles.listCard}>
-          <List.Item
-            title="Notifications"
-            left={(props) => <List.Icon {...props} icon="bell-outline" />}
-            right={(props) => <List.Icon {...props} icon="chevron-right" />}
-            style={styles.listItem}
-            disabled
-          />
-          <Divider />
-          <List.Item
-            title="Privacy"
-            left={(props) => <List.Icon {...props} icon="shield-outline" />}
-            right={(props) => <List.Icon {...props} icon="chevron-right" />}
-            style={styles.listItem}
-            disabled
-          />
-          <Divider />
-          <List.Item
-            title="Help & Support"
-            left={(props) => (
-              <List.Icon {...props} icon="help-circle-outline" />
-            )}
-            right={(props) => <List.Icon {...props} icon="chevron-right" />}
-            style={styles.listItem}
-            disabled
-          />
+      {/* Quick Links */}
+      <TouchableOpacity style={styles.linkRow} onPress={handleWaterTracking}>
+        <View style={styles.linkLeft}>
+          <Text style={styles.linkIcon}>💧</Text>
+          <Text variant="bodyLarge" style={styles.linkText}>
+            Water Tracking
+          </Text>
         </View>
-      </View>
+        <MaterialCommunityIcons name="chevron-right" size={20} color={palette.textSecondary} />
+      </TouchableOpacity>
 
-      {/* Logout */}
-      <Button
-        mode="outlined"
-        onPress={handleLogout}
-        textColor={palette.white}
-        style={styles.logoutButton}
-        icon="logout"
-      >
-        Sign Out
-      </Button>
+      <TouchableOpacity style={styles.linkRow} onPress={handleWeightLog}>
+        <View style={styles.linkLeft}>
+          <Text style={styles.linkIcon}>⚖️</Text>
+          <Text variant="bodyLarge" style={styles.linkText}>
+            Weight Log
+          </Text>
+        </View>
+        <MaterialCommunityIcons name="chevron-right" size={20} color={palette.textSecondary} />
+      </TouchableOpacity>
+
+      {/* Log Out */}
+      <TouchableOpacity style={styles.logoutButton} onPress={handleLogOut}>
+        <MaterialCommunityIcons name="logout" size={20} color={palette.white} />
+        <Text variant="bodyLarge" style={styles.logoutText}>
+          Log Out
+        </Text>
+      </TouchableOpacity>
     </ScrollView>
   );
 }
@@ -164,62 +137,139 @@ export default function ProfileScreen(): React.JSX.Element {
 const styles = StyleSheet.create({
   scrollContent: {
     paddingHorizontal: 24,
-    paddingVertical: 24,
+    paddingTop: 24,
     paddingBottom: 48,
+    gap: 12,
   },
-  userCard: {
+  pageTitle: {
+    color: palette.textPrimary,
+    fontWeight: 'bold',
+    marginBottom: 8,
+  },
+  card: {
+    backgroundColor: palette.white,
+    borderRadius: 16,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: palette.border,
+  },
+  userRow: {
+    flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 24,
+    gap: 16,
   },
   avatar: {
-    width: 72,
-    height: 72,
-    borderRadius: 36,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
     backgroundColor: palette.primary,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 12,
   },
   avatarText: {
     color: palette.white,
-    fontSize: 28,
+    fontSize: 22,
     fontWeight: 'bold',
+  },
+  userInfo: {
+    flex: 1,
+    gap: 2,
   },
   userName: {
     color: palette.textPrimary,
-    fontWeight: 'bold',
+    fontWeight: '600',
   },
   userEmail: {
     color: palette.textSecondary,
+  },
+  editLink: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
     marginTop: 4,
   },
-  bannerSection: {
-    marginBottom: 24,
-  },
-  sectionsContainer: {
-    marginBottom: 24,
+  editLinkText: {
+    color: palette.primary,
   },
   sectionHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginTop: 8,
+  },
+  sectionTitle: {
     color: palette.textPrimary,
     fontWeight: '600',
-    marginBottom: 12,
   },
-  listCard: {
+  editGoalsLink: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 2,
+  },
+  editGoalsText: {
+    color: palette.primary,
+  },
+  goalsCard: {
     backgroundColor: palette.white,
-    borderRadius: 12,
-    overflow: 'hidden',
+    borderRadius: 16,
+    padding: 16,
     borderWidth: 1,
-    borderColor: '#F0F0F0',
+    borderColor: palette.border,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
-  listItem: {
-    paddingVertical: 4,
+  goalStat: {
+    flex: 1,
+    alignItems: 'center',
+    gap: 4,
   },
-  listItemTitle: {
-    textTransform: 'capitalize',
+  goalValue: {
+    color: palette.textPrimary,
+    fontWeight: '700',
+    textAlign: 'center',
+  },
+  goalLabel: {
+    color: palette.textSecondary,
+    textAlign: 'center',
+  },
+  goalDivider: {
+    width: 1,
+    height: 40,
+    backgroundColor: palette.border,
+  },
+  linkRow: {
+    backgroundColor: palette.white,
+    borderRadius: 16,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: palette.border,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  linkLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  linkIcon: {
+    fontSize: 20,
+  },
+  linkText: {
+    color: palette.textPrimary,
   },
   logoutButton: {
-    borderColor: palette.error,
     backgroundColor: palette.error,
-    borderRadius: 12,
+    borderRadius: 16,
+    padding: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    marginTop: 8,
+  },
+  logoutText: {
+    color: palette.white,
+    fontWeight: '600',
   },
 });
