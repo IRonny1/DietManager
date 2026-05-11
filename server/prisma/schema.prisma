@@ -17,6 +17,7 @@ model User {
   goals          Goal[]
   waterLogs      WaterLog[]
   weightLogs     WeightLog[]
+  waterGoal      WaterGoal?
   workouts       Workout[]
   recipes        Recipe[]
   favorites      FavoriteMeal[]
@@ -80,12 +81,15 @@ model Meal {
   imageUrl    String?
   source      String    @default("manual")
   mealType    String?
+  loggedAt    DateTime  @default(now())
+  date        String    @default("")
   createdAt   DateTime  @default(now())
   user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   tags        MealTag[]
 
   @@index([userId, createdAt])
   @@index([userId, mealType])
+  @@index([userId, date])
 }
 
 model Goal {
@@ -116,10 +120,12 @@ model WaterLog {
   userId    String
   amount    Float
   unit      String   @default("ml")
+  date      String   @default("")
   createdAt DateTime @default(now())
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId, createdAt])
+  @@index([userId, date])
 }
 
 model WeightLog {
@@ -128,10 +134,12 @@ model WeightLog {
   weight    Float
   unit      String   @default("kg")
   note      String?
+  date      String   @default("")
   createdAt DateTime @default(now())
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId, createdAt])
+  @@index([userId, date])
 }
 
 model Workout {
@@ -274,4 +282,11 @@ model UserAchievement {
 
   @@unique([userId, achievementId])
   @@index([userId])
+}
+
+model WaterGoal {
+  id     String @id @default(uuid())
+  userId String @unique
+  goalMl Int    @default(2000)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
