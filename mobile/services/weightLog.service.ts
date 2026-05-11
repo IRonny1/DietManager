@@ -1,9 +1,5 @@
-export interface WeightEntry {
-  id: string;
-  date: string;      // YYYY-MM-DD
-  weightKg: number;
-  note?: string;
-}
+import type { WeightEntry } from '@/types/weightTracking.types';
+export type { WeightEntry };
 
 let entries: WeightEntry[] = [
   { id: '1', date: '2026-05-08', weightKg: 75.5 },
@@ -22,6 +18,12 @@ export function getWeightEntries(
   return Promise.resolve([...filtered].sort((a, b) => b.date.localeCompare(a.date)));
 }
 
+export function getLatestWeight(): Promise<WeightEntry | null> {
+  if (entries.length === 0) return Promise.resolve(null);
+  const sorted = [...entries].sort((a, b) => b.date.localeCompare(a.date));
+  return Promise.resolve(sorted[0]);
+}
+
 export function addWeightEntry(entry: Omit<WeightEntry, 'id'>): Promise<WeightEntry> {
   const newEntry: WeightEntry = { ...entry, id: Date.now().toString() };
   entries = [newEntry, ...entries];
@@ -31,4 +33,17 @@ export function addWeightEntry(entry: Omit<WeightEntry, 'id'>): Promise<WeightEn
 export function deleteWeightEntry(id: string): Promise<void> {
   entries = entries.filter((e) => e.id !== id);
   return Promise.resolve();
+}
+
+export function getWeightChange(sortedEntries: WeightEntry[]): number {
+  if (sortedEntries.length < 2) return 0;
+  const latest = sortedEntries[0].weightKg;
+  const oldest = sortedEntries[sortedEntries.length - 1].weightKg;
+  return parseFloat((latest - oldest).toFixed(1));
+}
+
+export function getWeightGoal(): number {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const { useProfileStore } = require('@/stores/useProfileStore');
+  return useProfileStore.getState().profile?.basicBodyInfo?.targetWeightKg ?? 0;
 }
