@@ -40,14 +40,14 @@ export class DiaryController {
 
   @Get()
   @ApiOperation({ summary: 'Get meals within a date range' })
-  @ApiQuery({ name: 'from', description: 'YYYY-MM-DD' })
-  @ApiQuery({ name: 'to', description: 'YYYY-MM-DD' })
+  @ApiQuery({ name: 'from', required: false, description: 'YYYY-MM-DD' })
+  @ApiQuery({ name: 'to', required: false, description: 'YYYY-MM-DD' })
   getMeals(
     @CurrentUser() user: JwtValidatedUser,
-    @Query('from') from: string,
-    @Query('to') to: string,
+    @Query('from') from?: string,
+    @Query('to') to?: string,
   ): Promise<MealResponseDto[]> {
-    return this.diaryService.getMeals(user.userId, from, to);
+    return this.diaryService.getMeals(user.userId, from ?? '', to ?? '');
   }
 
   @Post()

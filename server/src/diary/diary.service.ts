@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Meal } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
+import { todayStr } from '../common/utils/date.utils';
 import { CreateMealDto } from './dto/create-meal.dto';
 import { UpdateMealDto } from './dto/update-meal.dto';
 import { MealResponseDto } from './dto/meal-response.dto';
@@ -10,7 +11,7 @@ export class DiaryService {
   constructor(private readonly prisma: PrismaService) {}
 
   async getTodayMeals(userId: string): Promise<MealResponseDto[]> {
-    const today = this.todayStr();
+    const today = todayStr();
     const meals = await this.prisma.meal.findMany({
       where: { userId, date: today },
       orderBy: { loggedAt: 'desc' },
@@ -26,11 +27,18 @@ export class DiaryService {
     const meals = await this.prisma.meal.findMany({
       where: {
         userId,
-        date: { gte: from, lte: to },
+        ...(from || to
+          ? {
+              date: {
+                ...(from ? { gte: from } : {}),
+                ...(to ? { lte: to } : {}),
+              },
+            }
+          : {}),
       },
       orderBy: { loggedAt: 'desc' },
     });
-    return meals.map(this.toResponse);
+    return meals.map(meal => this.toResponse(meal));
   }
 
   async addMeal(userId: string, dto: CreateMealDto): Promise<MealResponseDto> {
@@ -57,7 +65,10 @@ export class DiaryService {
     id: string,
     dto: UpdateMealDto,
   ): Promise<MealResponseDto> {
-    await this.assertOwnership(userId, id);
+    const existing = await this.prisma.meal.findFirst({ where: { id, userId } });
+    if (!existing) {
+      throw new NotFoundException(`Meal ${id} not found`);
+    }
     const meal = await this.prisma.meal.update({
       where: { id },
       data: {
@@ -77,13 +88,8 @@ export class DiaryService {
   }
 
   async deleteMeal(userId: string, id: string): Promise<void> {
-    await this.assertOwnership(userId, id);
-    await this.prisma.meal.delete({ where: { id } });
-  }
-
-  private async assertOwnership(userId: string, id: string): Promise<void> {
-    const meal = await this.prisma.meal.findUnique({ where: { id } });
-    if (!meal || meal.userId !== userId) {
+    const result = await this.prisma.meal.deleteMany({ where: { id, userId } });
+    if (result.count === 0) {
       throw new NotFoundException(`Meal ${id} not found`);
     }
   }
@@ -102,13 +108,5 @@ export class DiaryService {
       loggedAt: meal.loggedAt.toISOString(),
       date: meal.date,
     };
-  }
-
-  private todayStr(): string {
-    const d = new Date();
-    const y = d.getFullYear();
-    const m = String(d.getMonth() + 1).padStart(2, '0');
-    const day = String(d.getDate()).padStart(2, '0');
-    return `${y}-${m}-${day}`;
   }
 }
