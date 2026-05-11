@@ -69,7 +69,7 @@ export class WaterController {
 
   @Patch('goal')
   @ApiOperation({ summary: 'Update daily water goal' })
-  async updateGoal(
+  updateGoal(
     @CurrentUser() user: JwtValidatedUser,
     @Body() dto: UpdateGoalDto,
   ): Promise<void> {
