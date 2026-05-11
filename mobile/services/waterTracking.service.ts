@@ -1,52 +1,53 @@
+import { authenticatedFetch } from '@/api/authenticatedFetch';
 import type { WaterEntry } from '@/types/waterTracking.types';
 
-let entries: WaterEntry[] = [];
-let dailyGoalMl = 2000;
-
-function toLocalDateStr(date: Date): string {
-  const y = date.getFullYear();
-  const m = String(date.getMonth() + 1).padStart(2, '0');
-  const d = String(date.getDate()).padStart(2, '0');
-  return `${y}-${m}-${d}`;
-}
-
-export function getTodayWaterLog(): Promise<{
+export async function getTodayWaterLog(): Promise<{
   entries: WaterEntry[];
   total: number;
   goal: number;
 }> {
-  const today = toLocalDateStr(new Date());
-  const todayEntries = entries
-    .filter((e) => e.date === today)
-    .sort((a, b) => b.loggedAt.localeCompare(a.loggedAt));
-  const total = todayEntries.reduce((sum, e) => sum + e.amountMl, 0);
-  return Promise.resolve({ entries: todayEntries, total, goal: dailyGoalMl });
+  const response = await authenticatedFetch('/api/water/today');
+  if (!response.ok) {
+    throw new Error(`Failed to fetch water log: ${response.status}`);
+  }
+  return response.json() as Promise<{ entries: WaterEntry[]; total: number; goal: number }>;
 }
 
-export function addWaterEntry(amountMl: number): Promise<WaterEntry> {
-  const now = new Date();
-  const entry: WaterEntry = {
-    id: Date.now().toString(),
-    amountMl,
-    loggedAt: now.toISOString(),
-    date: toLocalDateStr(now),
-  };
-  entries = [entry, ...entries];
-  return Promise.resolve(entry);
+export async function addWaterEntry(amountMl: number): Promise<WaterEntry> {
+  const response = await authenticatedFetch('/api/water', {
+    method: 'POST',
+    body: JSON.stringify({ amountMl }),
+  });
+  if (!response.ok) {
+    throw new Error(`Failed to add water entry: ${response.status}`);
+  }
+  return response.json() as Promise<WaterEntry>;
 }
 
-export function deleteWaterEntry(id: string): Promise<void> {
-  entries = entries.filter((e) => e.id !== id);
-  return Promise.resolve();
+export async function deleteWaterEntry(id: string): Promise<void> {
+  const response = await authenticatedFetch(`/api/water/${id}`, {
+    method: 'DELETE',
+  });
+  if (!response.ok) {
+    throw new Error(`Failed to delete water entry: ${response.status}`);
+  }
 }
 
-export function clearTodayLog(): Promise<void> {
-  const today = toLocalDateStr(new Date());
-  entries = entries.filter((e) => e.date !== today);
-  return Promise.resolve();
+export async function clearTodayLog(): Promise<void> {
+  const response = await authenticatedFetch('/api/water/today', {
+    method: 'DELETE',
+  });
+  if (!response.ok) {
+    throw new Error(`Failed to clear today's water log: ${response.status}`);
+  }
 }
 
-export function updateDailyGoal(goalMl: number): Promise<void> {
-  dailyGoalMl = goalMl;
-  return Promise.resolve();
+export async function updateDailyGoal(goalMl: number): Promise<void> {
+  const response = await authenticatedFetch('/api/water/goal', {
+    method: 'PATCH',
+    body: JSON.stringify({ goalMl }),
+  });
+  if (!response.ok) {
+    throw new Error(`Failed to update water goal: ${response.status}`);
+  }
 }
