@@ -1,4 +1,4 @@
-import { IsInt, IsNotEmpty, Min } from 'class-validator';
+import { IsDateString, IsInt, IsNotEmpty, Min } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class AddWaterDto {
@@ -7,4 +7,9 @@ export class AddWaterDto {
   @IsInt()
   @Min(1)
   amountMl: number;
+
+  @ApiProperty({ description: 'YYYY-MM-DD — the local date on the user device' })
+  @IsNotEmpty()
+  @IsDateString()
+  date: string;
 }

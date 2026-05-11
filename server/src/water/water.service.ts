@@ -28,9 +28,8 @@ export class WaterService {
   }
 
   async addEntry(userId: string, dto: AddWaterDto): Promise<WaterEntryDto> {
-    const today = todayStr();
     const entry = await this.prisma.waterLog.create({
-      data: { userId, amount: dto.amountMl, unit: 'ml', date: today },
+      data: { userId, amount: dto.amountMl, unit: 'ml', date: dto.date },
     });
     return this.toEntryDto(entry);
   }

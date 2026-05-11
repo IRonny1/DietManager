@@ -13,10 +13,18 @@ export async function getTodayWaterLog(): Promise<{
   return response.json() as Promise<{ entries: WaterEntry[]; total: number; goal: number }>;
 }
 
+function localDateStr(): string {
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+}
+
 export async function addWaterEntry(amountMl: number): Promise<WaterEntry> {
   const response = await authenticatedFetch('/api/water', {
     method: 'POST',
-    body: JSON.stringify({ amountMl }),
+    body: JSON.stringify({ amountMl, date: localDateStr() }),
   });
   if (!response.ok) {
     throw new Error(`Failed to add water entry: ${response.status}`);
