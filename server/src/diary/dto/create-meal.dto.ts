@@ -8,8 +8,7 @@ import {
   Min,
 } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-
-const CATEGORIES = ['Breakfast', 'Lunch', 'Dinner', 'Snack'] as const;
+import { MEAL_CATEGORIES } from '../constants/meal.constants';
 
 export class CreateMealDto {
   @ApiProperty()
@@ -17,9 +16,9 @@ export class CreateMealDto {
   @IsString()
   name: string;
 
-  @ApiProperty({ enum: CATEGORIES })
+  @ApiProperty({ enum: MEAL_CATEGORIES })
   @IsNotEmpty()
-  @IsIn(CATEGORIES)
+  @IsIn(MEAL_CATEGORIES)
   category: string;
 
   @ApiProperty()

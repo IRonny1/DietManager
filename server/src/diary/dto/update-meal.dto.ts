@@ -1,4 +1,5 @@
 import {
+  IsDateString,
   IsIn,
   IsNumber,
   IsOptional,
@@ -6,8 +7,7 @@ import {
   Min,
 } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
-
-const CATEGORIES = ['Breakfast', 'Lunch', 'Dinner', 'Snack'] as const;
+import { MEAL_CATEGORIES } from '../constants/meal.constants';
 
 export class UpdateMealDto {
   @ApiPropertyOptional()
@@ -15,9 +15,9 @@ export class UpdateMealDto {
   @IsString()
   name?: string;
 
-  @ApiPropertyOptional({ enum: CATEGORIES })
+  @ApiPropertyOptional({ enum: MEAL_CATEGORIES })
   @IsOptional()
-  @IsIn(CATEGORIES)
+  @IsIn(MEAL_CATEGORIES)
   category?: string;
 
   @ApiPropertyOptional()
@@ -60,8 +60,8 @@ export class UpdateMealDto {
   @IsString()
   loggedAt?: string;
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({ description: 'YYYY-MM-DD' })
   @IsOptional()
-  @IsString()
+  @IsDateString()
   date?: string;
 }
