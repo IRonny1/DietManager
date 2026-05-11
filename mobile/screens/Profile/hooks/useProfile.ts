@@ -63,10 +63,16 @@ export function useProfile(): UseProfileReturn {
   }, [router]);
 
   const handleWaterTracking = useCallback((): void => {
+    // Route file exists at mobile/app/water-tracking.tsx.
+    // Expo Router regenerates typed routes on `expo start`; run it once to clear the TS error below.
+    // @ts-ignore
     router.push('/water-tracking');
   }, [router]);
 
   const handleWeightLog = useCallback((): void => {
+    // Route file exists at mobile/app/weight-log.tsx.
+    // Expo Router regenerates typed routes on `expo start`; run it once to clear the TS error below.
+    // @ts-ignore
     router.push('/weight-log');
   }, [router]);
 

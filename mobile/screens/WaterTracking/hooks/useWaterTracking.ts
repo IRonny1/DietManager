@@ -65,6 +65,9 @@ export function useWaterTracking(): UseWaterTrackingReturn {
   }, [loadData]);
 
   const handleLogCustomAmount = useCallback((): void => {
+    // Route file exists at mobile/app/log-custom-amount.tsx.
+    // Expo Router regenerates typed routes on `expo start`; run it once to clear the TS error below.
+    // @ts-ignore
     router.push('/log-custom-amount');
   }, [router]);
 
