@@ -87,6 +87,14 @@ function RootLayoutNav() {
           />
           <Stack.Screen name="water-tracking" options={{ title: 'Water Tracking' }} />
           <Stack.Screen name="weight-log" options={{ title: 'Weight Log' }} />
+          <Stack.Screen
+            name="log-custom-amount"
+            options={{ title: 'Log Custom Amount', presentation: 'modal', headerBackTitle: 'Back' }}
+          />
+          <Stack.Screen
+            name="log-weight"
+            options={{ title: 'Log Weight', presentation: 'modal', headerBackTitle: 'Back' }}
+          />
         </Stack>
       </ThemeProvider>
     </PaperProvider>
