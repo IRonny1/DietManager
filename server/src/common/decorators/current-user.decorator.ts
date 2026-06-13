@@ -1,6 +1,7 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 import { Request } from 'express';
 import { JwtValidatedUser } from '../types/jwt.types';
+import '../types/express.d';
 
 export const CurrentUser = createParamDecorator(
   (
@@ -8,7 +9,7 @@ export const CurrentUser = createParamDecorator(
     ctx: ExecutionContext,
   ): JwtValidatedUser | string => {
     const request = ctx.switchToHttp().getRequest<Request>();
-    const user = request.user as JwtValidatedUser;
+    const user = request.user!;
     return data ? user[data] : user;
   },
 );
