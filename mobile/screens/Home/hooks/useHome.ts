@@ -3,7 +3,6 @@ import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'expo-router';
 
 import { getTodayMeals } from '@/services/diary.service';
-import { useAuthStore } from '@/stores/useAuthStore';
 import { useProfileStore } from '@/stores/useProfileStore';
 import type { MealEntry, DailyLog } from '@/types/diary.types';
 
@@ -50,7 +49,6 @@ const DEFAULT_CALORIE_GOAL = 2000;
 
 export function useHome(): UseHomeReturn {
   const router = useRouter();
-  const user = useAuthStore((state) => state.user);
   const onboardingData = useProfileStore((state) => state.onboardingData);
   const calorieGoal = onboardingData?.calorieGoal ?? DEFAULT_CALORIE_GOAL;
 
@@ -88,7 +86,7 @@ export function useHome(): UseHomeReturn {
     router.push('/(tabs)/scan');
   }, [router]);
 
-  const userName = user?.email?.split('@')[0] ?? 'Alex';
+  const userName = 'Alex';
 
   return {
     dailyLog,
