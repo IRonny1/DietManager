@@ -13,8 +13,6 @@ import { Button, HelperText, Text, TextInput } from 'react-native-paper';
 import ChipSelector from '@/components/ChipSelector';
 import { palette } from '@/constants/Colors';
 import { GENDER_OPTIONS } from '@/constants/profile.constants';
-import { useAuthStore } from '@/stores/useAuthStore';
-
 import { useEditProfileForm } from './hooks/useEditProfileForm';
 
 type FormFieldProps = {
@@ -69,7 +67,6 @@ export default function EditProfileScreen(): React.JSX.Element {
   const { form, isSubmitting, serverError, onSubmit } = useEditProfileForm();
   const { control, formState, setValue, watch } = form;
   const genderValue = watch('gender');
-  const userEmail = useAuthStore((state) => state.user?.email ?? '');
 
   return (
     <KeyboardAvoidingView
@@ -133,20 +130,6 @@ export default function EditProfileScreen(): React.JSX.Element {
             />
           )}
         />
-
-        {/* Email (read-only) */}
-        <View style={styles.field}>
-          <TextInput
-            label="Email"
-            value={userEmail}
-            mode="outlined"
-            disabled
-            style={styles.input}
-            outlineColor={palette.border}
-            activeOutlineColor={palette.primary}
-          />
-          <HelperText type="info">Email cannot be changed here</HelperText>
-        </View>
 
         {/* Body Info Section */}
         <Text variant="titleSmall" style={styles.sectionLabel}>
