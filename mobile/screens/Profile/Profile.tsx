@@ -10,7 +10,6 @@ import { useProfile } from './hooks/useProfile';
 
 export default function ProfileScreen(): React.JSX.Element {
   const {
-    user,
     profile,
     avatarInitials,
     calorieGoal,
@@ -20,13 +19,12 @@ export default function ProfileScreen(): React.JSX.Element {
     handleEditGoals,
     handleWaterTracking,
     handleWeightLog,
-    handleLogOut,
   } = useProfile();
 
   const displayName =
     profile?.firstName && profile?.lastName
       ? `${profile.firstName} ${profile.lastName}`
-      : user?.email ?? '';
+      : 'My Profile';
 
   return (
     <ScrollView
@@ -46,9 +44,6 @@ export default function ProfileScreen(): React.JSX.Element {
           <View style={styles.userInfo}>
             <Text variant="titleMedium" style={styles.userName}>
               {displayName}
-            </Text>
-            <Text variant="bodySmall" style={styles.userEmail}>
-              {user?.email}
             </Text>
             <TouchableOpacity onPress={handleEditProfile} style={styles.editLink}>
               <MaterialCommunityIcons name="pencil" size={14} color={palette.primary} />
@@ -122,14 +117,6 @@ export default function ProfileScreen(): React.JSX.Element {
         </View>
         <MaterialCommunityIcons name="chevron-right" size={20} color={palette.textSecondary} />
       </TouchableOpacity>
-
-      {/* Log Out */}
-      <TouchableOpacity style={styles.logoutButton} onPress={handleLogOut}>
-        <MaterialCommunityIcons name="logout" size={20} color={palette.white} />
-        <Text variant="bodyLarge" style={styles.logoutText}>
-          Log Out
-        </Text>
-      </TouchableOpacity>
     </ScrollView>
   );
 }
@@ -178,9 +165,6 @@ const styles = StyleSheet.create({
   userName: {
     color: palette.textPrimary,
     fontWeight: '600',
-  },
-  userEmail: {
-    color: palette.textSecondary,
   },
   editLink: {
     flexDirection: 'row',
@@ -254,19 +238,5 @@ const styles = StyleSheet.create({
   },
   linkText: {
     color: palette.textPrimary,
-  },
-  logoutButton: {
-    backgroundColor: palette.error,
-    borderRadius: 16,
-    padding: 16,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 8,
-    marginTop: 8,
-  },
-  logoutText: {
-    color: palette.white,
-    fontWeight: '600',
   },
 });
