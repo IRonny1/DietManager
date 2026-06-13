@@ -6,10 +6,8 @@ import {
   Param,
   Patch,
   Post,
-  UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 import type { JwtValidatedUser } from '../common/types/jwt.types';
 import { WaterService } from './water.service';
@@ -21,8 +19,6 @@ import type {
 } from './dto/water-log-response.dto';
 
 @ApiTags('water')
-@ApiBearerAuth()
-@UseGuards(JwtAuthGuard)
 @Controller('water')
 export class WaterController {
   constructor(private readonly waterService: WaterService) {}

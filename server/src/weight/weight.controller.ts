@@ -6,15 +6,12 @@ import {
   Param,
   Post,
   Query,
-  UseGuards,
 } from '@nestjs/common';
 import {
-  ApiBearerAuth,
   ApiOperation,
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 import type { JwtValidatedUser } from '../common/types/jwt.types';
 import { WeightService } from './weight.service';
@@ -22,8 +19,6 @@ import { AddWeightDto } from './dto/add-weight.dto';
 import type { WeightEntryResponseDto } from './dto/weight-entry-response.dto';
 
 @ApiTags('weight')
-@ApiBearerAuth()
-@UseGuards(JwtAuthGuard)
 @Controller('weight')
 export class WeightController {
   constructor(private readonly weightService: WeightService) {}

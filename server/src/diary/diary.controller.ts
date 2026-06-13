@@ -7,15 +7,12 @@ import {
   Post,
   Put,
   Query,
-  UseGuards,
 } from '@nestjs/common';
 import {
-  ApiBearerAuth,
   ApiOperation,
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 import type { JwtValidatedUser } from '../common/types/jwt.types';
 import { DiaryService } from './diary.service';
@@ -24,8 +21,6 @@ import { UpdateMealDto } from './dto/update-meal.dto';
 import type { MealResponseDto } from './dto/meal-response.dto';
 
 @ApiTags('diary')
-@ApiBearerAuth()
-@UseGuards(JwtAuthGuard)
 @Controller('diary')
 export class DiaryController {
   constructor(private readonly diaryService: DiaryService) {}

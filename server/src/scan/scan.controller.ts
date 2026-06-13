@@ -1,13 +1,10 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { Body, Controller, Post } from '@nestjs/common';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ScanService } from './scan.service';
 import { AnalyzeFoodDto } from './dto/analyze-food.dto';
 import type { FoodScanResultDto } from './dto/food-scan-result.dto';
 
 @ApiTags('scan')
-@ApiBearerAuth()
-@UseGuards(JwtAuthGuard)
 @Controller('scan')
 export class ScanController {
   constructor(private readonly scanService: ScanService) {}

@@ -5,10 +5,8 @@ import {
   Param,
   Post,
   Put,
-  UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 import type { JwtValidatedUser } from '../common/types/jwt.types';
 import { ProfileService } from './profile.service';
@@ -27,14 +25,12 @@ type StepDto =
   | GoalsDto;
 
 @ApiTags('profile')
-@ApiBearerAuth()
-@UseGuards(JwtAuthGuard)
 @Controller('profile')
 export class ProfileController {
   constructor(private readonly profileService: ProfileService) {}
 
   @Get()
-  @ApiOperation({ summary: 'Get the authenticated user profile' })
+  @ApiOperation({ summary: 'Get the user profile' })
   getProfile(@CurrentUser() user: JwtValidatedUser): Promise<ProfileResponse> {
     return this.profileService.getProfile(user.userId, user.tenantId);
   }
