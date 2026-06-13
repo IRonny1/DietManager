@@ -3,13 +3,10 @@ import { useCallback } from 'react';
 import { useRouter } from 'expo-router';
 
 import { useProfileStore } from '@/stores/useProfileStore';
-import { useAuthStore } from '@/stores/useAuthStore';
 import { PRIMARY_GOAL_OPTIONS, ACTIVITY_LEVEL_OPTIONS } from '@/constants/profile.constants';
-import type { User } from '@/types/auth.types';
 import type { UserProfile } from '@/types/profile.types';
 
 type UseProfileReturn = {
-  user: User | null;
   profile: UserProfile | null;
   avatarInitials: string;
   calorieGoal: number;
@@ -19,17 +16,16 @@ type UseProfileReturn = {
   handleEditGoals: () => void;
   handleWaterTracking: () => void;
   handleWeightLog: () => void;
-  handleLogOut: () => void;
 };
 
-function getAvatarInitials(profile: UserProfile | null, email: string | undefined): string {
+function getAvatarInitials(profile: UserProfile | null): string {
   if (profile?.firstName && profile?.lastName) {
     return `${profile.firstName[0]}${profile.lastName[0]}`.toUpperCase();
   }
   if (profile?.firstName) {
     return profile.firstName[0].toUpperCase();
   }
-  return (email?.[0] ?? '?').toUpperCase();
+  return 'U';
 }
 
 function getGoalLabel(primaryGoal: string | null | undefined): string {
@@ -46,10 +42,9 @@ function getActivityLabel(activityLevel: string | null | undefined): string {
 
 export function useProfile(): UseProfileReturn {
   const router = useRouter();
-  const user = useAuthStore((state) => state.user);
   const profile = useProfileStore((state) => state.profile);
 
-  const avatarInitials = getAvatarInitials(profile, user?.email);
+  const avatarInitials = getAvatarInitials(profile);
   const calorieGoal = profile?.calorieGoal ?? 0;
   const primaryGoal = getGoalLabel(profile?.goals?.primaryGoal);
   const activityLevel = getActivityLabel(profile?.goals?.activityLevel);
@@ -63,25 +58,16 @@ export function useProfile(): UseProfileReturn {
   }, [router]);
 
   const handleWaterTracking = useCallback((): void => {
-    // Route file exists at mobile/app/water-tracking.tsx.
-    // Expo Router regenerates typed routes on `expo start`; run it once to clear the TS error below.
     // @ts-ignore
     router.push('/water-tracking');
   }, [router]);
 
   const handleWeightLog = useCallback((): void => {
-    // Route file exists at mobile/app/weight-log.tsx.
-    // Expo Router regenerates typed routes on `expo start`; run it once to clear the TS error below.
     // @ts-ignore
     router.push('/weight-log');
   }, [router]);
 
-  const handleLogOut = useCallback((): void => {
-    router.push('/logout-confirmation');
-  }, [router]);
-
   return {
-    user,
     profile,
     avatarInitials,
     calorieGoal,
@@ -91,6 +77,5 @@ export function useProfile(): UseProfileReturn {
     handleEditGoals,
     handleWaterTracking,
     handleWeightLog,
-    handleLogOut,
   };
 }
