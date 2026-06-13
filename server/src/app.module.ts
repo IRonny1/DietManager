@@ -1,20 +1,19 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from './config/config.module';
 import { PrismaModule } from './prisma/prisma.module';
-import { AuthModule } from './auth/auth.module';
 import { ProfileModule } from './profile/profile.module';
 import { ScanModule } from './scan/scan.module';
 import { DiaryModule } from './diary/diary.module';
 import { WaterModule } from './water/water.module';
 import { WeightModule } from './weight/weight.module';
+import { SingleUserMiddleware } from './common/middleware/single-user.middleware';
 
 @Module({
   imports: [
     ConfigModule,
     PrismaModule,
-    AuthModule,
     ProfileModule,
     ScanModule,
     DiaryModule,
@@ -24,4 +23,8 @@ import { WeightModule } from './weight/weight.module';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer): void {
+    consumer.apply(SingleUserMiddleware).forRoutes('*');
+  }
+}
