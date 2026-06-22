@@ -5,7 +5,7 @@ import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useProfileStore } from '../../../stores/useProfileStore';
 import { calculateMacros } from '../../../services/calorieCalculator.service';
-import { saveGoalsStep, completeProfile } from '../../../services/profile.service';
+import { saveGoalsStep } from '../../../services/profile.service';
 import { Colors } from '../../../constants/Colors';
 import { SPACING } from '../../../constants/spacing.constants';
 import { FONT_SIZE, FONT_WEIGHT } from '../../../constants/typography.constants';
@@ -13,6 +13,7 @@ import { FONT_SIZE, FONT_WEIGHT } from '../../../constants/typography.constants'
 export default function Result(): React.JSX.Element {
   const router = useRouter();
   const onboardingData = useProfileStore((s) => s.onboardingData);
+  const completeProfile = useProfileStore((s) => s.completeProfile);
 
   const calorieGoal = onboardingData.calorieGoal ?? 2000;
   const macros = calculateMacros(calorieGoal);
