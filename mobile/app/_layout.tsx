@@ -8,7 +8,7 @@ import { PaperProvider } from 'react-native-paper';
 
 import { useColorScheme } from '@/components/useColorScheme';
 import { paperTheme } from '@/constants/paperTheme';
-import { useHasCompletedOnboarding } from '@/stores/useProfileStore';
+import { useIsBootstrapDone, useProfileStore } from '@/stores/useProfileStore';
 
 export {
   ErrorBoundary,
@@ -44,19 +44,28 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
-  const hasCompletedOnboarding = useHasCompletedOnboarding();
+  const isBootstrapDone = useIsBootstrapDone();
+  const profile = useProfileStore((s) => s.profile);
+  const loadProfile = useProfileStore((s) => s.loadProfile);
   const segments = useSegments();
   const router = useRouter();
 
   useEffect(() => {
-    const inOnboardingGroup = segments[0] === '(onboarding)';
+    loadProfile();
+  }, [loadProfile]);
 
-    if (!hasCompletedOnboarding && !inOnboardingGroup) {
+  useEffect(() => {
+    if (!isBootstrapDone) return;
+
+    const inOnboardingGroup = segments[0] === '(onboarding)';
+    const isComplete = profile?.isComplete ?? false;
+
+    if (!isComplete && !inOnboardingGroup) {
       router.replace('/(onboarding)/welcome');
-    } else if (hasCompletedOnboarding && inOnboardingGroup) {
+    } else if (isComplete && inOnboardingGroup) {
       router.replace('/(tabs)');
     }
-  }, [hasCompletedOnboarding, segments, router]);
+  }, [isBootstrapDone, profile, segments, router]);
 
   return (
     <PaperProvider theme={paperTheme}>
