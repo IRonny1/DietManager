@@ -79,3 +79,8 @@ export type SaveProfileStepRequest = {
 export type ProfileResponse = {
   profile: UserProfile;
 };
+
+export type GoalsStepPayload = {
+  activityLevel: string;
+  primaryGoal: string;
+};

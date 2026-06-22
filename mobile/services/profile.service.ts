@@ -1,5 +1,6 @@
 import { authenticatedFetch } from '@/api/authenticatedFetch';
 import type {
+  GoalsStepPayload,
   ProfileResponse,
   ProfileStepData,
 } from '@/types/profile.types';
@@ -41,11 +42,6 @@ export async function completeProfile(): Promise<ProfileResponse> {
 
   return response.json() as Promise<ProfileResponse>;
 }
-
-export type GoalsStepPayload = {
-  activityLevel: string;
-  primaryGoal: string;
-};
 
 export async function saveGoalsStep(
   payload: GoalsStepPayload,
