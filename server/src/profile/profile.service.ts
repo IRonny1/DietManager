@@ -64,14 +64,6 @@ export class ProfileService {
     userId: string,
     tenantId: string,
   ): Promise<ProfileResponse> {
-    const existing = await this.prisma.userProfile.findUnique({
-      where: { userId },
-    });
-
-    if (this.calculateCompletionPercentage(existing) < 100) {
-      throw new ProfileIncompleteException();
-    }
-
     const profile = await this.prisma.userProfile.upsert({
       where: { userId },
       create: { userId, tenantId, isComplete: true },
