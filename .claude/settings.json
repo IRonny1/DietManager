@@ -24,11 +24,6 @@
       "Bash(git branch:*)",
       "Bash(npm run:*)",
       "Bash(npx:*)"
-    ],
-    "deny": [
-      "Bash(rm:*)",
-      "Bash(rm -rf:*)",
-      "Bash(git push:*)"
     ]
   },
   "mcpServers": {
