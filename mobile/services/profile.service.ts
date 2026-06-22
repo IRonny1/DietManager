@@ -41,3 +41,23 @@ export async function completeProfile(): Promise<ProfileResponse> {
 
   return response.json() as Promise<ProfileResponse>;
 }
+
+export type GoalsStepPayload = {
+  activityLevel: string;
+  primaryGoal: string;
+};
+
+export async function saveGoalsStep(
+  payload: GoalsStepPayload,
+): Promise<ProfileResponse> {
+  const response = await authenticatedFetch('/api/profile/step/goals', {
+    method: 'PUT',
+    body: JSON.stringify(payload),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to save goals step: ${response.status}`);
+  }
+
+  return response.json() as Promise<ProfileResponse>;
+}
