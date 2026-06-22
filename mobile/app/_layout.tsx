@@ -56,9 +56,10 @@ function RootLayoutNav() {
 
   useEffect(() => {
     if (!isBootstrapDone) return;
+    if (profile === null) return;
 
     const inOnboardingGroup = segments[0] === '(onboarding)';
-    const isComplete = profile?.isComplete ?? false;
+    const isComplete = profile.isComplete;
 
     if (!isComplete && !inOnboardingGroup) {
       router.replace('/(onboarding)/welcome');

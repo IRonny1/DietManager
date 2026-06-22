@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import OpenAI from 'openai';
-import type { FoodScanResultDto } from './dto/food-scan-result.dto';
+import type { FoodScanResultDto } from './dto';
 
 const SYSTEM_PROMPT = `You are a nutrition expert. Analyze the food in the image and return a JSON object with:
 {
@@ -39,7 +39,6 @@ export class ScanService {
     try {
       const completion = await this.openai.chat.completions.create({
         model: 'gpt-4o',
-        max_tokens: 500,
         messages: [
           {
             role: 'user',

@@ -38,7 +38,7 @@ export class DiaryService {
       },
       orderBy: { loggedAt: 'desc' },
     });
-    return meals.map(meal => this.toResponse(meal));
+    return meals.map((meal) => this.toResponse(meal));
   }
 
   async addMeal(userId: string, dto: CreateMealDto): Promise<MealResponseDto> {
@@ -65,7 +65,9 @@ export class DiaryService {
     id: string,
     dto: UpdateMealDto,
   ): Promise<MealResponseDto> {
-    const existing = await this.prisma.meal.findFirst({ where: { id, userId } });
+    const existing = await this.prisma.meal.findFirst({
+      where: { id, userId },
+    });
     if (!existing) {
       throw new NotFoundException(`Meal ${id} not found`);
     }
@@ -74,11 +76,15 @@ export class DiaryService {
       data: {
         ...(dto.name !== undefined && { name: dto.name }),
         ...(dto.category !== undefined && { category: dto.category }),
-        ...(dto.calories !== undefined && { calories: Math.round(dto.calories) }),
+        ...(dto.calories !== undefined && {
+          calories: Math.round(dto.calories),
+        }),
         ...(dto.protein !== undefined && { protein: dto.protein }),
         ...(dto.fat !== undefined && { fat: dto.fat }),
         ...(dto.carbs !== undefined && { carbs: dto.carbs }),
-        ...(dto.portionGrams !== undefined && { portionSize: dto.portionGrams }),
+        ...(dto.portionGrams !== undefined && {
+          portionSize: dto.portionGrams,
+        }),
         ...(dto.imageUri !== undefined && { imageUrl: dto.imageUri }),
         ...(dto.loggedAt !== undefined && { loggedAt: new Date(dto.loggedAt) }),
         ...(dto.date !== undefined && { date: dto.date }),

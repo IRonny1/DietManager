@@ -187,36 +187,6 @@ export const useProfileStore = create<ProfileStore>((set, get) => ({
   },
 }));
 
-export function useProfile(): UserProfile | null {
-  return useProfileStore((state) => state.profile);
-}
-
-export function useCurrentStep(): number {
-  return useProfileStore((state) => state.currentStep);
-}
-
-export function useProfileLoading(): boolean {
-  return useProfileStore((state) => state.isLoading);
-}
-
-export function useProfileSaving(): boolean {
-  return useProfileStore((state) => state.isSaving);
-}
-
-export function useCompletionPercentage(): number {
-  return useProfileStore((state) => state.profile?.completionPercentage ?? 0);
-}
-
-export function useMeasurementSystem(): MeasurementSystem {
-  return useProfileStore((state) => state.measurementSystem);
-}
-
-export function useIsProfileComplete(): boolean {
-  return useProfileStore((state) => state.profile?.isComplete ?? false);
-}
-
 export const useIsBootstrapDone = (): boolean =>
   useProfileStore((s) => s.isBootstrapDone);
 
-export const useOnboardingData = (): OnboardingData =>
-  useProfileStore((s) => s.onboardingData);

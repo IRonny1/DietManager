@@ -20,7 +20,7 @@ const ACTIVITY_OPTIONS: { value: ActivityLevel; label: string; subtitle: string 
 const GOAL_OPTIONS: { value: PrimaryGoal; label: string; subtitle: string }[] = [
   { value: 'lose_weight', label: 'Lose Weight', subtitle: 'Create calorie deficit' },
   { value: 'maintain_weight', label: 'Maintain Weight', subtitle: 'Keep current weight' },
-  { value: 'gain_weight', label: 'Gain Weight', subtitle: 'Create calorie surplus' },
+  { value: 'gain_muscle', label: 'Gain Muscle', subtitle: 'Build muscle mass' },
 ];
 
 function RadioRow({

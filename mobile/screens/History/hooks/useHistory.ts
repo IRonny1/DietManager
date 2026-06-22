@@ -144,7 +144,21 @@ export function useHistory(): UseHistoryReturn {
 
   const handleMealPress = useCallback(
     (meal: MealEntry): void => {
-      router.push({ pathname: '/edit-meal', params: { mealId: meal.id } });
+      router.push({
+        pathname: '/edit-meal',
+        params: {
+          mealId: meal.id,
+          name: meal.name,
+          category: meal.category ?? '',
+          calories: meal.calories.toString(),
+          protein: meal.protein.toString(),
+          fat: meal.fat.toString(),
+          carbs: meal.carbs.toString(),
+          portionGrams: meal.portionGrams.toString(),
+          loggedAt: meal.loggedAt,
+          date: meal.date,
+        },
+      });
     },
     [router],
   );

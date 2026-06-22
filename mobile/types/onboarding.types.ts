@@ -10,7 +10,7 @@ export type ActivityLevel =
   | 'very_active'
   | 'extremely_active';
 
-export type PrimaryGoal = 'lose_weight' | 'maintain_weight' | 'gain_weight';
+export type PrimaryGoal = 'lose_weight' | 'maintain_weight' | 'gain_muscle';
 
 export interface PersonalData {
   age: number;

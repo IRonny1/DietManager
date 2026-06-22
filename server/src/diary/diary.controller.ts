@@ -8,11 +8,7 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
-import {
-  ApiOperation,
-  ApiQuery,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 import type { JwtValidatedUser } from '../common/types/jwt.types';
 import { DiaryService } from './diary.service';
