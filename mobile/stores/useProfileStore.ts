@@ -16,7 +16,7 @@ type ProfileState = {
   isLoading: boolean;
   isSaving: boolean;
   error: string | null;
-  hasCompletedOnboarding: boolean;
+  isBootstrapDone: boolean;
   onboardingData: OnboardingData;
 };
 
@@ -31,7 +31,6 @@ type ProfileActions = {
   clearError: () => void;
   resetProfile: () => void;
   setOnboardingData: (partial: Partial<OnboardingData>) => void;
-  completeOnboarding: () => void;
   updateProfile: (partial: Partial<UserProfile>) => void;
 };
 
@@ -44,7 +43,7 @@ const initialState: ProfileState = {
   isLoading: false,
   isSaving: false,
   error: null,
-  hasCompletedOnboarding: false,
+  isBootstrapDone: false,
   onboardingData: {
     goalMethod: null,
     personalData: null,
@@ -74,13 +73,13 @@ export const useProfileStore = create<ProfileStore>((set, get) => ({
       const resumeStep =
         firstIncomplete === -1 ? 0 : firstIncomplete;
 
-      set({ profile, currentStep: resumeStep, isLoading: false });
+      set({ profile, currentStep: resumeStep, isLoading: false, isBootstrapDone: true });
     } catch (err) {
       const message =
         err instanceof Error
           ? err.message
           : 'Failed to load profile. Please try again.';
-      set({ isLoading: false, error: message });
+      set({ isLoading: false, error: message, isBootstrapDone: true });
     }
   },
 
@@ -156,9 +155,6 @@ export const useProfileStore = create<ProfileStore>((set, get) => ({
       onboardingData: { ...s.onboardingData, ...partial },
     })),
 
-  completeOnboarding: () =>
-    set({ hasCompletedOnboarding: true }),
-
   updateProfile: (partial: Partial<UserProfile>): void => {
     const current = get().profile;
     if (current === null) return;
@@ -219,8 +215,8 @@ export function useIsProfileComplete(): boolean {
   return useProfileStore((state) => state.profile?.isComplete ?? false);
 }
 
-export const useHasCompletedOnboarding = (): boolean =>
-  useProfileStore((s) => s.hasCompletedOnboarding);
+export const useIsBootstrapDone = (): boolean =>
+  useProfileStore((s) => s.isBootstrapDone);
 
 export const useOnboardingData = (): OnboardingData =>
   useProfileStore((s) => s.onboardingData);
