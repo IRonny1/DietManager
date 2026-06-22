@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { Text, Button } from 'react-native-paper';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useProfileStore } from '../../../stores/useProfileStore';
 import { calculateMacros } from '../../../services/calorieCalculator.service';
+import { saveGoalsStep, completeProfile } from '../../../services/profile.service';
 import { Colors } from '../../../constants/Colors';
 import { SPACING } from '../../../constants/spacing.constants';
 import { FONT_SIZE, FONT_WEIGHT } from '../../../constants/typography.constants';
@@ -12,14 +13,28 @@ import { FONT_SIZE, FONT_WEIGHT } from '../../../constants/typography.constants'
 export default function Result(): React.JSX.Element {
   const router = useRouter();
   const onboardingData = useProfileStore((s) => s.onboardingData);
-  const completeOnboarding = useProfileStore((s) => s.completeOnboarding);
 
   const calorieGoal = onboardingData.calorieGoal ?? 2000;
   const macros = calculateMacros(calorieGoal);
 
-  function onLooksGood(): void {
-    completeOnboarding();
-    router.replace('/(tabs)');
+  const [isSaving, setIsSaving] = useState(false);
+
+  async function onLooksGood(): Promise<void> {
+    if (isSaving) return;
+    setIsSaving(true);
+    try {
+      const activityGoal = onboardingData.activityGoal;
+      if (activityGoal) {
+        await saveGoalsStep({
+          activityLevel: activityGoal.activityLevel,
+          primaryGoal: activityGoal.primaryGoal,
+        });
+      }
+      await completeProfile();
+      router.replace('/(tabs)');
+    } catch {
+      setIsSaving(false);
+    }
   }
 
   function onAdjust(): void {
@@ -65,6 +80,8 @@ export default function Result(): React.JSX.Element {
           style={styles.btn}
           contentStyle={styles.btnContent}
           onPress={onLooksGood}
+          disabled={isSaving}
+          loading={isSaving}
         >
           Looks good!
         </Button>
