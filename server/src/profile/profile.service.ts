@@ -1,10 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { UserProfile } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
-import {
-  InvalidProfileStepException,
-  ProfileIncompleteException,
-} from '../common/exceptions/domain.exception';
+import { InvalidProfileStepException } from '../common/exceptions/domain.exception';
 import { BasicBodyInfoDto } from './dto/basic-body-info.dto';
 import { HealthConditionsDto } from './dto/health-conditions.dto';
 import { DietPreferencesDto } from './dto/diet-preferences.dto';
