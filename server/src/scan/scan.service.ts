@@ -22,7 +22,7 @@ const SYSTEM_PROMPT = `You are a nutrition expert. Analyze the food in the image
 }
 
 If you cannot identify the food, return { "recognized": false }.
-Base nutrition values on a standard portion size for the identified food.
+Base nutrition values on a standard portion size (100g) for the identified food.
 All values must be numbers (not strings). Return ONLY the JSON object, no other text.`;
 
 @Injectable()
