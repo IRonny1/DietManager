@@ -22,7 +22,7 @@ function MacroItem({ label, value, color }: MacroItemProps): React.JSX.Element {
   return (
     <View style={styles.item}>
       <Text style={styles.label}>{label}</Text>
-      <Text style={[styles.value, { color }]}>{value}g</Text>
+      <Text style={[styles.value, { color }]}>{Math.round(value)}g</Text>
     </View>
   );
 }

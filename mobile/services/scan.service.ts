@@ -36,6 +36,7 @@ export async function analyzeFood(
 
   const data = (await response.json()) as ScanAnalysisResponse;
 
+
   if (!data.recognized) {
     throw new UnrecognizedFoodError();
   }

@@ -53,14 +53,21 @@ export class ScanService {
         ],
       });
       content = completion.choices[0]?.message?.content ?? '';
-    } catch {
+    } catch (e) {
+      console.error('Failed to analyze food image', e);
       throw new InternalServerErrorException('Failed to analyze food image');
     }
 
+    const jsonContent = content
+      .replace(/^```(?:json)?\s*/i, '')
+      .replace(/\s*```$/, '')
+      .trim();
+
     let parsed: FoodScanResultDto;
     try {
-      parsed = JSON.parse(content) as FoodScanResultDto;
-    } catch {
+      parsed = JSON.parse(jsonContent) as FoodScanResultDto;
+    } catch (e) {
+      console.error('Failed to parse food analysis response', e);
       throw new BadRequestException('Food could not be analyzed');
     }
 

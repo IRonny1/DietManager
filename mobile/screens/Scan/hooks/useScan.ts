@@ -68,11 +68,7 @@ export function useScan(): UseScanReturn {
       setCurrentScan(result);
       router.push('/scan-result');
     } catch (err) {
-      if (err instanceof UnrecognizedFoodError) {
-        setError('unrecognized');
-      } else {
-        setError('network');
-      }
+      setError('unrecognized');
       setCapturedImageUri(null);
     } finally {
       setIsScanning(false);
